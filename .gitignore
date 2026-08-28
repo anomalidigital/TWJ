@@ -1,0 +1,11 @@
+# OS / editor cruft
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# generated single-file preview (rebuild with: python _tools/bundle.py)
+_tools/twj-preview.html
+
+# python
+__pycache__/
+*.pyc
