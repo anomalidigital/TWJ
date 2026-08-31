@@ -35,7 +35,7 @@ web/
 └── _tools/
     ├── build.py                generator 5 halaman dari partial bersama
     ├── bundle.py               generator preview 1-file (untuk share link)
-    └── twj-preview.html        hasil bundle (2,7 MB, self-contained)
+    └── twj-preview.html        hasil bundle (2,2 MB, self-contained — di-gitignore)
 ```
 
 Header, footer, CTA band, dan ikon didefinisikan sekali di `_tools/build.py`
@@ -99,8 +99,20 @@ self-host ada di `_Shared/_Font/`.
 5. Judul hero About di situs lama tertulis "Our Humble **Begining**" — di sini
    diperbaiki jadi "Beginning".
 
+## Deploy
+
+Repo: <https://github.com/anomalidigital/TWJ>
+
+Setiap push ke `main` otomatis di-deploy ke GitHub Pages lewat
+`.github/workflows/pages.yml`. Tidak ada langkah manual — workflow-nya
+sekalian mengaktifkan Pages di repo.
+
+Karena semua link di halaman memakai relative path, situs ini jalan baik di
+root domain maupun di subpath seperti `/TWJ/`. Waktu nanti pindah ke
+twj.co.id, tidak ada yang perlu diubah.
+
 ## Optimasi gambar
 
-Semua foto sudah dikonversi ke `.webp` (total ± 1,8 MB untuk seluruh situs).
+Semua foto sudah dikonversi ke `.webp` (total ± 1,4 MB untuk seluruh situs).
 Kalau ada foto baru, samakan ukuran: hero 1840×690 (pakai banner asli twj.co.id), gambar section 1500×1000,
 potret orang 760×880, logo klien lebar 360.
