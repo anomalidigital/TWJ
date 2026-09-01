@@ -102,14 +102,26 @@ self-host ada di `_Shared/_Font/`.
 ## Deploy
 
 Repo: <https://github.com/anomalidigital/TWJ>
+Live: <https://anomalidigital.github.io/TWJ/>
 
-Setiap push ke `main` otomatis di-deploy ke GitHub Pages lewat
-`.github/workflows/pages.yml`. Tidak ada langkah manual — workflow-nya
-sekalian mengaktifkan Pages di repo.
+GitHub Pages publish dari branch **`gh-pages`** (bukan Actions — token workflow
+di repo ini izinnya read-only, jadi `actions/configure-pages` tidak bisa
+mengaktifkan Pages sendiri). Push branch `gh-pages` menyalakan Pages otomatis
+tanpa perlu ubah setelan apa pun.
+
+Cara deploy perubahan:
+
+```bash
+git push origin main
+git push origin main:gh-pages
+```
+
+File `.nojekyll` wajib ada — tanpa itu Jekyll akan membuang folder `_tools/`
+karena namanya diawali underscore.
 
 Karena semua link di halaman memakai relative path, situs ini jalan baik di
-root domain maupun di subpath seperti `/TWJ/`. Waktu nanti pindah ke
-twj.co.id, tidak ada yang perlu diubah.
+subpath `/TWJ/` maupun nanti di root twj.co.id — tidak ada yang perlu diubah
+waktu pindah domain.
 
 ## Optimasi gambar
 
