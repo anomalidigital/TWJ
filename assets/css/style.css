@@ -174,7 +174,9 @@ ul { margin: 0; padding: 0; list-style: none; }
   height: var(--header-h);
   display: flex;
   align-items: center;
-  transition: background 0.5s var(--ease), box-shadow 0.5s var(--ease), height 0.5s var(--ease);
+  transition: background 0.5s var(--ease), box-shadow 0.5s var(--ease),
+    height 0.5s var(--ease), transform 0.45s var(--ease);
+  will-change: transform;
 }
 .header::after {
   content: "";
@@ -186,9 +188,9 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 .header .shell { display: flex; align-items: center; justify-content: space-between; gap: 2rem; width: 100%; }
 .brand { display: flex; align-items: center; }
-.brand img { height: 34px; width: auto; }
+.brand img { height: 34px; width: auto; transition: height 0.5s var(--ease); }
 .brand .logo-light { display: block; }
-.brand .logo-dark { display: none; }
+.brand .logo-dark { display: none; }  /* header stays on the light mark at every scroll position */
 
 .nav { display: none; align-items: center; gap: clamp(1.4rem, 2.8vw, 2.8rem); }
 @media (min-width: 940px) { .nav { display: flex; } }
@@ -215,17 +217,24 @@ ul { margin: 0; padding: 0; list-style: none; }
 .nav a:hover::after, .nav a[aria-current="page"]::after { transform: scaleX(1); transform-origin: left; }
 .nav a:hover, .nav a[aria-current="page"] { color: var(--luster); }
 
+/* scrolled: frosted navy, not a flat white bar — the mark and the nav keep
+   their light treatment so the header reads as one continuous element */
 .header.is-solid {
-  background: var(--luster);
-  height: 76px;
-  box-shadow: 0 1px 0 rgba(31, 58, 95, 0.08);
+  background: rgba(31, 58, 95, 0.82);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  backdrop-filter: blur(18px) saturate(150%);
+  height: 68px;
+  box-shadow: 0 14px 34px rgba(22, 41, 63, 0.18);
 }
-.header.is-solid::after { background: var(--line); }
-.header.is-solid .logo-light { display: none; }
-.header.is-solid .logo-dark { display: block; }
-.header.is-solid .nav a { color: var(--navy); opacity: 0.75; }
-.header.is-solid .nav a:hover, .header.is-solid .nav a[aria-current="page"] { opacity: 1; }
-.header.is-solid .burger span { background: var(--navy); }
+.header.is-solid::after {
+  background: linear-gradient(90deg,
+    rgba(200, 164, 93, 0) 0%,
+    rgba(200, 164, 93, 0.55) 24%,
+    rgba(200, 164, 93, 0.55) 76%,
+    rgba(200, 164, 93, 0) 100%);
+}
+.header.is-solid .brand img { height: 27px; }
+.header.is-hidden { transform: translateY(-102%); }
 
 .burger {
   display: inline-flex;
@@ -342,12 +351,26 @@ ul { margin: 0; padding: 0; list-style: none; }
   border: 1px solid var(--silver);
 }
 .figure--layered img { position: relative; }
+
+/* thin rule set inside the photo */
+.figure--inset::after {
+  content: "";
+  position: absolute;
+  inset: clamp(10px, 1.3vw, 18px);
+  border: 1px solid rgba(244, 241, 236, 0.6);
+  pointer-events: none;
+}
 .ratio-3x2 { aspect-ratio: 3 / 2; }
+.ratio-3x4 { aspect-ratio: 3 / 4; }
 .ratio-4x5 { aspect-ratio: 4 / 5; }
 
 .duo { display: grid; gap: clamp(2rem, 4vw, 4.5rem); align-items: center; }
 @media (min-width: 900px) { .duo { grid-template-columns: 1fr 1fr; } }
 @media (min-width: 900px) { .duo--flip .duo__text { order: 2; } }
+.duo--top { align-items: start; }
+.duo--center .duo__text { text-align: center; }
+.duo--center .duo__text .lead { margin-inline: auto; }
+.duo--center .duo__text .btn-row { justify-content: center; }
 
 /* ---------- 8. Accordion (home · partners) ----------------- */
 .accordion { border-top: 1px solid var(--line); }
@@ -387,12 +410,19 @@ ul { margin: 0; padding: 0; list-style: none; }
 .acc__panel p { font-size: 0.98rem; }
 
 .partner-figure { position: relative; }
-@media (min-width: 900px) { .partner-figure { position: sticky; top: 110px; } }
 .partner-figure__img { position: relative; aspect-ratio: 4 / 5; overflow: hidden; background: var(--navy); }
+/* on two columns the portrait takes exactly the height of the accordion beside
+   it, so it can never run past the column and read as cut off */
+@media (min-width: 900px) {
+  .duo--top { align-items: stretch; }
+  .partner-figure { height: 100%; }
+  .partner-figure__img { height: 100%; aspect-ratio: auto; min-height: 460px; }
+}
 .partner-figure__img img {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
   object-fit: cover;
+  object-position: center 22%;
   opacity: 0;
   transform: scale(1.04);
   transition: opacity 0.7s var(--ease), transform 0.9s var(--ease);
@@ -543,18 +573,18 @@ a.company__url:hover { color: var(--gold); }
   background: var(--navy);
   color: rgba(244, 241, 236, 0.78);
   text-align: center;
-  padding-block: clamp(4rem, 7vw, 6.5rem);
+  padding-block: clamp(4rem, 7vw, 6rem);
   overflow: hidden;
   isolation: isolate;
 }
-.cta__mark {
+.cta__bg { position: absolute; inset: 0; z-index: -2; }
+.cta__bg img { width: 100%; height: 100%; object-fit: cover; }
+.cta::before {
+  content: "";
   position: absolute;
-  left: 50%; top: 50%;
-  transform: translate(-50%, -50%);
-  width: min(66vw, 700px);
-  opacity: 0.07;
+  inset: 0;
   z-index: -1;
-  pointer-events: none;
+  background: linear-gradient(180deg, rgba(22, 41, 63, 0.9) 0%, rgba(22, 41, 63, 0.8) 100%);
 }
 .cta h2 { color: var(--luster); margin-bottom: 1.2rem; }
 .cta p { color: rgba(244, 241, 236, 0.72); max-width: 52ch; margin-inline: auto; }

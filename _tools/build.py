@@ -252,7 +252,7 @@ def person_card(slug, name, role, mail):
 def cta(title, text):
     return """
 <section class="cta">
-  <img class="cta__mark" src="assets/logo/mark-light.svg" alt="" aria-hidden="true">
+  <div class="cta__bg"><img src="assets/img/cta-band.webp" alt="" aria-hidden="true" loading="lazy" width="1840" height="520"></div>
   <div class="shell">
     <h2 class="h2" data-reveal>%s</h2>
     <p data-reveal style="--d:80ms">%s</p>
@@ -336,14 +336,14 @@ def page_home():
         + """
 <section class="section section--luster" id="story">
   <div class="shell">
-    <div class="duo">
+    <div class="duo duo--center">
+      <div class="figure figure--inset" data-reveal>
+        <img class="ratio-3x4" src="assets/img/story-building.webp" alt="Office towers in the Jakarta business district" loading="lazy" width="1100" height="1467">
+      </div>
       <div class="duo__text">
         <h2 class="h2" data-reveal>Founding Story</h2>
         <p class="lead mt-m" data-reveal style="--d:80ms">%s</p>
         <div class="btn-row" data-reveal>%s</div>
-      </div>
-      <div class="figure figure--layered" data-reveal style="--d:120ms">
-        <img class="ratio-3x2" src="assets/img/about-founding.webp" alt="The Tanuwijaya &amp; Partners team" loading="lazy" width="1500" height="1000">
       </div>
     </div>
   </div>
@@ -351,7 +351,7 @@ def page_home():
 
 <section class="section section--white" data-partners>
   <div class="shell">
-    <div class="duo">
+    <div class="duo duo--top">
       <div class="duo__text">
         <h2 class="h2" data-reveal>Our Partners</h2>
         <p class="lead mt-s" data-reveal style="--d:60ms">Trusted by clients since 1999</p>

@@ -10,13 +10,22 @@
   function currentHero() {
     return document.querySelector('#pages > .page:not([hidden]) .hero') || document.querySelector('.hero');
   }
+  var lastY = window.scrollY;
   function onScroll() {
     if (!header) return;
+    var y = window.scrollY;
     var hero = currentHero();
     var trigger = hero && hero.offsetHeight ? hero.offsetHeight * 0.6 : 10;
-    header.classList.toggle('is-solid', window.scrollY > trigger);
+    var solid = y > trigger;
+    header.classList.toggle('is-solid', solid);
+    // slide the bar away while reading downwards, bring it back on the way up
+    var down = y > lastY + 4;
+    var up = y < lastY - 4;
+    if (solid && down) header.classList.add('is-hidden');
+    else if (up || !solid) header.classList.remove('is-hidden');
+    if (down || up) lastY = y;
     var wa = document.querySelector('.wa');
-    if (wa) wa.classList.toggle('is-visible', window.scrollY > 240);
+    if (wa) wa.classList.toggle('is-visible', y > 240);
   }
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
@@ -86,6 +95,21 @@
     function measure(panel) {
       panel.style.height = panel.firstElementChild.offsetHeight + 'px';
     }
+    function remeasure() {
+      buttons.forEach(function (b) {
+        if (b.getAttribute('aria-expanded') === 'true') {
+          var p = document.getElementById(b.getAttribute('aria-controls'));
+          if (p) measure(p);
+        }
+      });
+    }
+    // the first measurement happens before the webfont lands, which reflows the
+    // copy taller and clips it against overflow:hidden — so measure again after
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(remeasure);
+    if ('ResizeObserver' in window) {
+      var ro = new ResizeObserver(remeasure);
+      acc.querySelectorAll('.acc__panel > div').forEach(function (c) { ro.observe(c); });
+    }
     buttons.forEach(function (btn) {
       var panel = document.getElementById(btn.getAttribute('aria-controls'));
       if (!panel) return;
@@ -104,14 +128,7 @@
         }
       });
     });
-    window.addEventListener('resize', function () {
-      buttons.forEach(function (b) {
-        if (b.getAttribute('aria-expanded') === 'true') {
-          var p = document.getElementById(b.getAttribute('aria-controls'));
-          if (p) measure(p);
-        }
-      });
-    });
+    window.addEventListener('resize', remeasure);
   });
 
   /* ---- 5. Contact form → WhatsApp or e-mail ---------------- */

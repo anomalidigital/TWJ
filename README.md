@@ -49,7 +49,7 @@ python _tools/build.py
 
 | Halaman | Section (urut) |
 |---|---|
-| Home | hero → Founding Story → Our Partners → Our Services → CTA |
+| Home | hero → Founding Story (foto kiri, teks tengah) → Our Partners → Our Services → CTA |
 | About Us | hero → Founding Story (teks + foto) → foto + teks → Clients → CTA |
 | Our People | hero → Partners → Associates → Companies → CTA |
 | Industries & Services | hero → Industries → Our Services → CTA |
@@ -75,15 +75,19 @@ self-host ada di `_Shared/_Font/`.
 
 ## Interaksi
 
-- Header transparan di atas hero, jadi solid saat scroll.
+- Header transparan di atas hero. Saat scroll berubah jadi navy transparan
+  ber-blur (bukan bar putih polos), mengecil, dan bergaris tipis emas di bawah.
+  Bar-nya menyingkir saat scroll ke bawah dan muncul lagi saat scroll ke atas.
 - Menu mobile: drawer full-screen navy.
-- Accordion partner di Home (foto ikut berganti).
+- Accordion partner di Home (foto ikut berganti). Tinggi foto mengikuti tinggi
+  kolom accordion, jadi tidak pernah menonjol keluar atau terlihat terpotong.
 - Reveal on scroll (IntersectionObserver, hormat `prefers-reduced-motion`).
 - Logo klien: grayscale, jadi full color saat hover.
 - Form Contact punya pilihan **Send Whatsapp Message / Send Email** seperti
   situs lama — belum ada backend, jadi submit membuka WhatsApp atau email
   client. Untuk kirim langsung dari web, pasang endpoint (Formspree /
   Web3Forms / API sendiri) di `assets/js/main.js`.
+- CTA band di atas footer memakai foto sebagai background dengan lapisan navy.
 - Tombol WhatsApp melayang, muncul setelah scroll.
 
 ## Yang perlu dikonfirmasi klien
@@ -126,5 +130,6 @@ waktu pindah domain.
 ## Optimasi gambar
 
 Semua foto sudah dikonversi ke `.webp` (total ± 1,4 MB untuk seluruh situs).
-Kalau ada foto baru, samakan ukuran: hero 1840×690 (pakai banner asli twj.co.id), gambar section 1500×1000,
-potret orang 760×880, logo klien lebar 360.
+Kalau ada foto baru, samakan ukuran: hero 1840×690 (banner asli twj.co.id),
+gambar section 1500×1000, foto potret Founding Story 1100×1467, band CTA
+1840×520, potret orang 760×880, logo klien lebar 360.
