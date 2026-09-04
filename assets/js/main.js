@@ -10,20 +10,14 @@
   function currentHero() {
     return document.querySelector('#pages > .page:not([hidden]) .hero') || document.querySelector('.hero');
   }
-  var lastY = window.scrollY;
   function onScroll() {
     if (!header) return;
     var y = window.scrollY;
     var hero = currentHero();
-    var trigger = hero && hero.offsetHeight ? hero.offsetHeight * 0.6 : 10;
-    var solid = y > trigger;
-    header.classList.toggle('is-solid', solid);
-    // slide the bar away while reading downwards, bring it back on the way up
-    var down = y > lastY + 4;
-    var up = y < lastY - 4;
-    if (solid && down) header.classList.add('is-hidden');
-    else if (up || !solid) header.classList.remove('is-hidden');
-    if (down || up) lastY = y;
+    // the bar stays put the whole way down; it only swaps from transparent
+    // (over the banner) to solid navy once the banner is behind you
+    var trigger = hero && hero.offsetHeight ? hero.offsetHeight * 0.55 : 10;
+    header.classList.toggle('is-solid', y > trigger);
     var wa = document.querySelector('.wa');
     if (wa) wa.classList.toggle('is-visible', y > 240);
   }

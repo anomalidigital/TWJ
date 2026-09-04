@@ -69,6 +69,7 @@ python _tools/build.py
 | `--slate` | `#6E6E6E` | body text |
 | `--silver` | `#B5B0AA` | garis, label sekunder |
 | `--gold` | `#C8A45D` | hairline di bawah heading, hover — maksimal 3% |
+| `--ink-soft` | `#434343` | background footer |
 
 Rasio mengikuti Brand Guideline (Submission 2, 260520):
 70% white/warm white · 20% navy · 7% slate &amp; silver · 3% gold.
@@ -79,19 +80,21 @@ self-host ada di `_Shared/_Font/`.
 
 ## Interaksi
 
-- Header transparan di atas hero. Saat scroll berubah jadi navy transparan
-  ber-blur (bukan bar putih polos), mengecil, dan bergaris tipis emas di bawah.
-  Bar-nya menyingkir saat scroll ke bawah dan muncul lagi saat scroll ke atas.
+- Header transparan di atas banner, lalu jadi navy solid begitu banner lewat.
+  Selalu menempel di atas (tidak menyingkir), tinggi mengecil dari 88px ke 68px,
+  dengan garis tipis emas di bawahnya.
+- Logo memakai logogram TWJ saja tanpa wordmark, di header maupun footer.
 - Menu mobile: drawer full-screen navy.
 - Accordion partner di Home (foto ikut berganti). Tinggi foto mengikuti tinggi
   kolom accordion, jadi tidak pernah menonjol keluar atau terlihat terpotong.
 - Reveal on scroll (IntersectionObserver, hormat `prefers-reduced-motion`).
-- Logo klien: grayscale, jadi full color saat hover.
+- Semua foto dan logo klien tampil berwarna penuh (tanpa filter grayscale);
+  hover hanya memberi sedikit zoom.
 - Form Contact punya pilihan **Send Whatsapp Message / Send Email** seperti
   situs lama — belum ada backend, jadi submit membuka WhatsApp atau email
   client. Untuk kirim langsung dari web, pasang endpoint (Formspree /
   Web3Forms / API sendiri) di `assets/js/main.js`.
-- CTA band di atas footer memakai foto sebagai background dengan lapisan navy.
+- CTA band di atas footer memakai foto dengan gradasi hitam di atasnya.
 - Tombol WhatsApp melayang, muncul setelah scroll.
 
 ## Yang perlu dikonfirmasi klien
@@ -106,6 +109,14 @@ self-host ada di `_Shared/_Font/`.
    mohon dicek apakah benar foto beliau.
 5. Judul hero About di situs lama tertulis "Our Humble **Begining**" — di sini
    diperbaiki jadi "Beginning".
+
+## Responsive
+
+Diperiksa otomatis di 320 / 375 / 430 / 600 / 768 / 834 / 1024 / 1280 / 1440 /
+1600 / 1920 px untuk kelima halaman — tidak ada horizontal overflow di satu pun
+kombinasi. Breakpoint utama: navigasi berganti drawer di bawah 940px, grid dua
+kolom jadi satu kolom di bawah 900px, dan grid layanan jadi satu kolom di bawah
+700px.
 
 ## Deploy
 

@@ -169,8 +169,7 @@ def header(page):
 <header class="header">
   <div class="shell">
     <a class="brand" href="index.html" aria-label="Tanuwijaya &amp; Partners — home">
-      <img class="logo-light" src="assets/logo/logo-light.svg" alt="Tanuwijaya &amp; Partners" width="720" height="144">
-      <img class="logo-dark" src="assets/logo/logo-primary.svg" alt="Tanuwijaya &amp; Partners" width="720" height="144">
+      <img src="assets/logo/mark-light.svg" alt="Tanuwijaya &amp; Partners" width="306" height="144">
     </a>
     <nav class="nav" aria-label="Primary">%s
     </nav>
@@ -268,7 +267,7 @@ def footer():
   <div class="shell">
     <div class="footer__grid">
       <div class="footer__brand">
-        <img src="assets/logo/logo-light.svg" alt="Tanuwijaya &amp; Partners" width="720" height="144">
+        <img src="assets/logo/mark-light.svg" alt="Tanuwijaya &amp; Partners" width="306" height="144">
       </div>
       <div>
         <h4>Contact Details</h4>
