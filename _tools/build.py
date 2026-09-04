@@ -289,9 +289,9 @@ def footer():
       <div>
         <h4>Contact Details</h4>
         <address>
-          Ciputra World 2, Tokopedia Tower Unit 20D,<br>
+          <a href="https://maps.app.goo.gl/C3ZMcoL4oCy52hBF6" target="_blank" rel="noopener">Ciputra World 2, Tokopedia Tower Unit 20D,<br>
           Jl. Prof. DR. Satrio No.Kav. 11<br>
-          Jakarta 12950 - Indonesia<br><br>
+          Jakarta 12950 - Indonesia</a><br><br>
           <a href="tel:02183780660">021-8378 0660/0770</a><br>
           <a href="%s">08119112147</a>
         </address>
@@ -522,13 +522,13 @@ def page_contact():
     offices = """<div class="office" data-reveal>
         <span class="office__country">Indonesia</span>
         <h3>Main Office</h3>
-        <address>Ciputra World 2, Tokopedia Tower Unit 20D<br>Jl. Prof. DR. Satrio Kav 11, Jakarta 12950</address>
+        <address><a href="https://maps.app.goo.gl/C3ZMcoL4oCy52hBF6" target="_blank" rel="noopener">Ciputra World 2, Tokopedia Tower Unit 20D<br>Jl. Prof. DR. Satrio Kav 11, Jakarta 12950</a></address>
         <dl><div><dt>Tel</dt><dd><a href="tel:02183780660">021-8378 0660 / 0770</a></dd></div></dl>
       </div>
       <div class="office" data-reveal>
         <span class="office__country" aria-hidden="true"></span>
         <h3>Public Accounting Firm Tanuwijaya (KAP TWJ)</h3>
-        <address>Citiloft Sudirman #10-17<br>Jl. KH Mas Mansyur Kav 121, Jakarta 10220</address>
+        <address><a href="https://maps.app.goo.gl/312emoqRF1Pwv4Pe9" target="_blank" rel="noopener">Citiloft Sudirman #10-17<br>Jl. KH Mas Mansyur Kav 121, Jakarta 10220</a></address>
         <dl>
           <div><dt>Email</dt><dd><a href="mailto:kap@twj.co.id">kap@twj.co.id</a></dd></div>
           <div><dt>Tel</dt><dd><a href="tel:02125558456">021-2555 8456</a></dd></div>
@@ -537,7 +537,7 @@ def page_contact():
       <div class="office" data-reveal>
         <span class="office__country">Singapore</span>
         <h3>Aurora Corporate Services Pte Ltd</h3>
-        <address>133 Cecil Street, #10-02<br>Keck Seng Tower, Singapore 069535</address>
+        <address><a href="https://maps.app.goo.gl/dgwuxeYoyr2wK2yEA" target="_blank" rel="noopener">133 Cecil Street, #10-02<br>Keck Seng Tower, Singapore 069535</a></address>
         <dl>
           <div><dt>Email</dt><dd><a href="mailto:auroracorporateservices@gmail.com">auroracorporateservices@gmail.com</a></dd></div>
           <div><dt>Tel</dt><dd><a href="tel:6568096226">+65 6809 6226 / 6227 / 6228</a></dd></div>
