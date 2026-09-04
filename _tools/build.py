@@ -170,7 +170,7 @@ def header(page):
 <header class="header">
   <div class="shell">
     <a class="brand" href="index.html" aria-label="Tanuwijaya &amp; Partners — home">
-      <img src="assets/logo/mark-light.svg" alt="Tanuwijaya &amp; Partners" width="306" height="144">
+      <img src="assets/logo/mark-navy.svg" alt="Tanuwijaya &amp; Partners" width="286" height="147">
     </a>
     <nav class="nav" aria-label="Primary">%s
     </nav>
@@ -197,7 +197,6 @@ def hero(title_top, title_thin, lead, button, img, alt):
 <section class="hero">
   <div class="hero__media"><img src="assets/img/%s" alt="%s" fetchpriority="high" width="2000" height="1180"></div>
   <div class="hero__scrim"></div>
-  <img class="hero__mark" src="assets/logo/mark-light.svg" alt="" aria-hidden="true">
   <div class="shell hero__inner">
     <h1 data-reveal>%s<span class="thin">%s</span></h1>
     <p class="lead" data-reveal style="--d:120ms">%s</p>

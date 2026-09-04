@@ -81,14 +81,17 @@ self-host ada di `_Shared/_Font/`.
 
 ## Interaksi
 
-- Header transparan hanya saat halaman diam di paling atas; begitu discroll
-   (8px) background navy langsung fade in, jadi headline banner tidak pernah
-   lewat di bawah bar transparan.
+- Header adalah bar solid Luster White di semua posisi scroll, memakai logo
+  navy primer. Ini mengikuti Brand Guideline: logo hanya boleh di atas putih /
+  warm white, versi reverse hanya di atas navy, dan tidak boleh di atas foto.
+  Yang berubah saat scroll cuma bayangan tipis dan garis emasnya, digerakkan
+  nilai 0-1 dari JS sepanjang 120px pertama supaya datang bertahap.
   Selalu menempel di atas dan **tingginya tidak pernah berubah saat scroll** —
   yang cross-fade hanya background dan garis emasnya, keduanya lewat `opacity`,
   jadi tidak ada reflow, jeda, atau seam. Tinggi 88px di desktop, 66px di bawah
   700px (breakpoint, bukan efek scroll).
-- Logo memakai logogram TWJ saja tanpa wordmark, di header maupun footer.
+- Logo memakai logogram TWJ saja tanpa wordmark: versi navy primer di header,
+  versi reverse di footer.
 - Menu mobile: drawer full-screen navy.
 - Accordion partner di Home: selalu ada satu partner yang terbuka, dan fotonya
   square 1:1 sehingga tidak pernah menonjol keluar dari kolomnya.
