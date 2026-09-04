@@ -18,8 +18,6 @@
     // (over the banner) to solid navy once the banner is behind you
     var trigger = hero && hero.offsetHeight ? hero.offsetHeight * 0.55 : 10;
     header.classList.toggle('is-solid', y > trigger);
-    var wa = document.querySelector('.wa');
-    if (wa) wa.classList.toggle('is-visible', y > 240);
   }
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
@@ -85,6 +83,8 @@
       scope.querySelectorAll('[data-figure-target]').forEach(function (node) {
         node.classList.toggle('is-active', node.getAttribute('data-figure-target') === key);
       });
+      var cap = scope.querySelector('[data-figure-caption]');
+      if (cap) cap.textContent = btn.getAttribute('data-name') || cap.textContent;
     }
     function measure(panel) {
       panel.style.height = panel.firstElementChild.offsetHeight + 'px';
@@ -109,17 +109,17 @@
       if (!panel) return;
       if (btn.getAttribute('aria-expanded') === 'true') { measure(panel); sync(btn); }
       btn.addEventListener('click', function () {
-        var open = btn.getAttribute('aria-expanded') === 'true';
+        // one partner is always shown, so the portrait beside the list always
+        // has an owner — clicking the open row keeps it open
+        if (btn.getAttribute('aria-expanded') === 'true') return;
         buttons.forEach(function (b) {
           var p = document.getElementById(b.getAttribute('aria-controls'));
           b.setAttribute('aria-expanded', 'false');
           if (p) p.style.height = '0px';
         });
-        if (!open) {
-          btn.setAttribute('aria-expanded', 'true');
-          measure(panel);
-          sync(btn);
-        }
+        btn.setAttribute('aria-expanded', 'true');
+        measure(panel);
+        sync(btn);
       });
     });
     window.addEventListener('resize', remeasure);

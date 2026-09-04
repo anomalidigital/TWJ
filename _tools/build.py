@@ -78,16 +78,16 @@ PARTNERS = [
 ]
 
 TEAM_PARTNERS = [
-    ("david-tanuwijaya", "David Tanuwijaya", "Partner", "david.tanuwijaya@kaptwj.com"),
-    ("joanita-b-salim", "Joanita B. Salim", "Manager", "joanita.salim@kaptwj.com"),
-    ("yenny-gunawan", "Yenny Gunawan", "Manager", "yenny.gunawan@kaptwj.com"),
-    ("muhammad-wisnu", "Muhammad Wisnu", "Manager", "muhammad.wisnu@kaptwj.com"),
+    ("david-tanuwijaya", "David Tanuwijaya", "Partner", "david.tanuwijaya@twj.co.id"),
+    ("joanita-b-salim", "Joanita B. Salim", "Manager", "joanita.salim@twj.co.id"),
+    ("yenny-gunawan", "Yenny Gunawan", "Manager", "yenny.gunawan@twj.co.id"),
+    ("muhammad-wisnu", "Muhammad Wisnu", "Manager", "muhammad.wisnu@twj.co.id"),
 ]
 ASSOCIATES = [
-    ("krisna-sandy", "Krisna Sandy", "Supervisor", "krisna.sandy@kaptwj.com"),
-    ("yosua-amos", "Yosua Amos", "Senior Associate", "yosua.amos@kaptwj.com"),
-    ("nur-layinah", "Nur Layinah", "Senior Associate", "nur.layinah@kaptwj.com"),
-    ("vani-puspita", "Vani Puspita", "Supervisor", "vani.dwi@kaptwj.com"),
+    ("krisna-sandy", "Krisna Sandy", "Supervisor", "krisna.sandy@twj.co.id"),
+    ("yosua-amos", "Yosua Amos", "Senior Associate", "yosua.amos@twj.co.id"),
+    ("nur-layinah", "Nur Layinah", "Senior Associate", "nur.layinah@twj.co.id"),
+    ("vani-puspita", "Vani Puspita", "Supervisor", "vani.dwi@twj.co.id"),
 ]
 COMPANIES = [
     ("Kantor Akuntan Publik Tanuwijaya", "kaptwj.com", "https://kaptwj.com"),
@@ -312,11 +312,11 @@ def page_home():
     acc, figs = [], []
     for i, (key, name, img, initials) in enumerate(PARTNERS):
         acc.append("""<div class="acc__item">
-        <button class="acc__btn" type="button" aria-expanded="%s" aria-controls="p-%s" data-figure="%s">
+        <button class="acc__btn" type="button" aria-expanded="%s" aria-controls="p-%s" data-figure="%s" data-name="%s">
           <span>%s</span><span class="acc__sign" aria-hidden="true"></span>
         </button>
         <div class="acc__panel" id="p-%s"><div><p>%s</p></div></div>
-      </div>""" % ("true" if i == 0 else "false", key, key, name, key, FOUNDING))
+      </div>""" % ("true" if i == 0 else "false", key, key, name, name, key, FOUNDING))
         if img:
             figs.append('<img data-figure-target="%s" class="%s" src="%s" alt="%s" loading="lazy">'
                         % (key, "is-active" if i == 0 else "", img, name))
@@ -359,6 +359,7 @@ def page_home():
       </div>
       <div class="partner-figure" data-reveal style="--d:120ms">
         <div class="partner-figure__img">%s</div>
+        <p class="partner-figure__caption"><b data-figure-caption>Linda Purnomo</b><span>Partner</span></p>
       </div>
     </div>
   </div>

@@ -31,7 +31,13 @@
   --gutter: clamp(1.25rem, 5vw, 4.5rem);
   --section: clamp(2.6rem, 4.6vw, 4.5rem);
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --header-h: 88px;
+}
+
+@media (max-width: 700px) {
+  :root { --header-h: 66px; }
+  .brand img { height: 36px; }
 }
 
 /* ---------- 2. Reset --------------------------------------- */
@@ -140,7 +146,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   text-transform: uppercase;
   cursor: pointer;
   overflow: hidden;
-  transition: color 0.45s var(--ease), border-color 0.45s var(--ease);
+  transition: color 0.4s var(--ease-out) 0.05s, border-color 0.4s var(--ease-out);
 }
 .btn span { position: relative; z-index: 1; }
 .btn::before {
@@ -150,11 +156,11 @@ ul { margin: 0; padding: 0; list-style: none; }
   background: var(--luster);
   transform: scaleX(0);
   transform-origin: right;
-  transition: transform 0.5s var(--ease);
+  transition: transform 0.55s var(--ease-out);
 }
 .btn:hover::before, .btn:focus-visible::before { transform: scaleX(1); transform-origin: left; }
 .btn:hover, .btn:focus-visible { color: var(--navy); }
-.btn .arrow { position: relative; z-index: 1; transition: transform 0.45s var(--ease); }
+.btn .arrow { position: relative; z-index: 1; transition: transform 0.45s var(--ease-out); }
 .btn:hover .arrow { transform: translateX(5px); }
 
 .btn--ghost { --btn-bg: transparent; --btn-fg: var(--navy); --btn-bd: var(--line); }
@@ -168,6 +174,9 @@ ul { margin: 0; padding: 0; list-style: none; }
 .btn-row { display: flex; flex-wrap: wrap; gap: 0.9rem; margin-top: 1.7rem; }
 
 /* ---------- 5. Header -------------------------------------- */
+/* The bar never changes size on scroll — a height animation is what made it
+   judder and leave a seam. Only the navy ground and the hairline cross-fade,
+   both on opacity, so nothing reflows. */
 .header {
   position: fixed;
   inset: 0 0 auto;
@@ -175,21 +184,30 @@ ul { margin: 0; padding: 0; list-style: none; }
   height: var(--header-h);
   display: flex;
   align-items: center;
-  transition: background 0.5s var(--ease), box-shadow 0.5s var(--ease),
-    height 0.5s var(--ease), transform 0.45s var(--ease);
-  will-change: transform;
 }
+.header::before,
 .header::after {
   content: "";
   position: absolute;
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-out);
+  pointer-events: none;
+}
+.header::before { inset: 0; background: var(--navy); }
+.header::after {
   inset: auto 0 0;
   height: 1px;
-  background: var(--line-invert);
-  transition: background 0.5s var(--ease);
+  background: linear-gradient(90deg,
+    rgba(200, 164, 93, 0) 0%,
+    rgba(200, 164, 93, 0.5) 22%,
+    rgba(200, 164, 93, 0.5) 78%,
+    rgba(200, 164, 93, 0) 100%);
 }
+.header.is-solid::before, .header.is-solid::after { opacity: 1; }
+.header .shell { position: relative; }
 .header .shell { display: flex; align-items: center; justify-content: space-between; gap: 2rem; width: 100%; }
 .brand { display: flex; align-items: center; }
-.brand img { height: 46px; width: auto; transition: height 0.5s var(--ease); }
+.brand img { height: 46px; width: auto; }
 
 
 .nav { display: none; align-items: center; gap: clamp(1.4rem, 2.8vw, 2.8rem); }
@@ -212,26 +230,12 @@ ul { margin: 0; padding: 0; list-style: none; }
   background: var(--gold);
   transform: scaleX(0);
   transform-origin: right;
-  transition: transform 0.45s var(--ease);
+  transition: transform 0.45s var(--ease-out);
 }
 .nav a:hover::after, .nav a[aria-current="page"]::after { transform: scaleX(1); transform-origin: left; }
 .nav a:hover, .nav a[aria-current="page"] { color: var(--luster); }
 
-/* scrolled: solid navy, no translucency — the mark and the nav keep their
-   light treatment so the bar reads as one continuous element */
-.header.is-solid {
-  background: var(--navy);
-  height: 68px;
-  box-shadow: 0 10px 30px rgba(22, 41, 63, 0.14);
-}
-.header.is-solid::after {
-  background: linear-gradient(90deg,
-    rgba(200, 164, 93, 0) 0%,
-    rgba(200, 164, 93, 0.55) 24%,
-    rgba(200, 164, 93, 0.55) 76%,
-    rgba(200, 164, 93, 0) 100%);
-}
-.header.is-solid .brand img { height: 34px; }
+
 
 .burger {
   display: inline-flex;
@@ -359,7 +363,6 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 .ratio-3x2 { aspect-ratio: 3 / 2; }
 .ratio-3x4 { aspect-ratio: 3 / 4; }
-.ratio-4x5 { aspect-ratio: 4 / 5; }
 
 .duo { display: grid; gap: clamp(1.7rem, 3.2vw, 3.4rem); align-items: center; }
 @media (min-width: 900px) { .duo { grid-template-columns: 1fr 1fr; } }
@@ -395,25 +398,43 @@ ul { margin: 0; padding: 0; list-style: none; }
   content: "";
   position: absolute;
   background: var(--navy);
-  transition: transform 0.45s var(--ease), background 0.35s var(--ease);
+  transition: transform 0.5s var(--ease-out), background 0.35s var(--ease-out);
 }
 .acc__sign::before { inset: 50% 0 auto; height: 1.5px; transform: translateY(-50%); }
 .acc__sign::after { inset: 0 50% auto; width: 1.5px; height: 100%; transform: translateX(-50%); }
 .acc__btn[aria-expanded="true"] .acc__sign::after { transform: translateX(-50%) rotate(90deg); }
 .acc__btn[aria-expanded="true"] .acc__sign::before,
 .acc__btn[aria-expanded="true"] .acc__sign::after { background: var(--gold); }
-.acc__panel { overflow: hidden; height: 0; transition: height 0.5s var(--ease); }
+.acc__panel { overflow: hidden; height: 0; transition: height 0.55s var(--ease-out); }
 .acc__panel > div { padding: 0 0 1.8rem; max-width: 58ch; }
 .acc__panel p { font-size: 0.98rem; }
 
-.partner-figure { position: relative; }
+.partner-figure { position: relative; display: flex; flex-direction: column; }
+.partner-figure__caption {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.85rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--silver);
+}
+.partner-figure__caption b {
+  color: var(--navy);
+  transition: opacity 0.35s var(--ease-out);
+}
 .partner-figure__img { position: relative; aspect-ratio: 4 / 5; overflow: hidden; background: var(--navy); }
 /* on two columns the portrait takes exactly the height of the accordion beside
    it, so it can never run past the column and read as cut off */
 @media (min-width: 900px) {
   .duo--top { align-items: stretch; }
   .partner-figure { height: 100%; }
-  .partner-figure__img { height: 100%; aspect-ratio: auto; min-height: 460px; }
+  .partner-figure__img { flex: 1; aspect-ratio: auto; min-height: 420px; }
 }
 .partner-figure__img img {
   position: absolute; inset: 0;
@@ -710,18 +731,16 @@ a.company__url:hover { color: var(--gold); }
   z-index: 70;
   width: 56px; height: 56px;
   border-radius: 50%;
-  background: var(--navy);
-  color: var(--luster);
+  background: #25d366;
+  color: #ffffff;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(244, 241, 236, 0.2);
-  transform: translateY(90px);
-  opacity: 0;
-  transition: transform 0.5s var(--ease), opacity 0.5s var(--ease), background 0.4s var(--ease);
+  border: 0;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.2);
+  transition: transform 0.4s var(--ease-out), background 0.4s var(--ease-out);
 }
-.wa.is-visible { transform: none; opacity: 1; }
-.wa:hover { background: var(--gold); }
+.wa:hover { background: #1da851; transform: scale(1.06); }
 .wa svg { width: 24px; height: 24px; fill: currentColor; }
 
 /* ---------- 17. Reveal ------------------------------------- */

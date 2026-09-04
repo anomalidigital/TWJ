@@ -33,7 +33,8 @@ web/
 ├── assets/
 │   ├── css/style.css           satu file, semua design token di :root
 │   ├── js/main.js              vanilla JS, tanpa dependency
-│   ├── logo/                   logo SVG (primary, light, logogram)
+│   ├── logo/                   logogram TWJ (mark-light dipakai, mark-navy
+│   │                           cadangan untuk background terang)
 │   └── img/                    hero, about, people/, clients/  (semua .webp)
 └── _tools/
     ├── build.py                generator 5 halaman dari partial bersama
@@ -81,12 +82,15 @@ self-host ada di `_Shared/_Font/`.
 ## Interaksi
 
 - Header transparan di atas banner, lalu jadi navy solid begitu banner lewat.
-  Selalu menempel di atas (tidak menyingkir), tinggi mengecil dari 88px ke 68px,
-  dengan garis tipis emas di bawahnya.
+  Selalu menempel di atas dan **tingginya tidak pernah berubah saat scroll** —
+  yang cross-fade hanya background dan garis emasnya, keduanya lewat `opacity`,
+  jadi tidak ada reflow, jeda, atau seam. Tinggi 88px di desktop, 66px di bawah
+  700px (breakpoint, bukan efek scroll).
 - Logo memakai logogram TWJ saja tanpa wordmark, di header maupun footer.
 - Menu mobile: drawer full-screen navy.
-- Accordion partner di Home (foto ikut berganti). Tinggi foto mengikuti tinggi
-  kolom accordion, jadi tidak pernah menonjol keluar atau terlihat terpotong.
+- Accordion partner di Home: selalu ada satu partner yang terbuka, jadi foto di
+  sebelahnya selalu punya pemilik yang jelas, dan namanya tertulis di bawah foto.
+  Tinggi foto mengikuti tinggi kolom accordion, jadi tidak pernah menonjol keluar.
 - Reveal on scroll (IntersectionObserver, hormat `prefers-reduced-motion`).
 - Semua foto dan logo klien tampil berwarna penuh (tanpa filter grayscale);
   hover hanya memberi sedikit zoom.
@@ -95,13 +99,13 @@ self-host ada di `_Shared/_Font/`.
   client. Untuk kirim langsung dari web, pasang endpoint (Formspree /
   Web3Forms / API sendiri) di `assets/js/main.js`.
 - CTA band di atas footer memakai foto dengan gradasi hitam di atasnya.
-- Tombol WhatsApp melayang, muncul setelah scroll.
+- Tombol WhatsApp melayang berwarna hijau WhatsApp (#25D366), selalu terlihat
+  termasuk saat di posisi paling atas.
 
 ## Yang perlu dikonfirmasi klien
 
-1. **Domain email tim** — situs lama pakai `@kaptwj.com`, sementara name card
-   dan email signature branding baru pakai `@twj.co.id`. Sekarang dipasang
-   `@kaptwj.com` (ikut situs lama).
+1. **Domain email tim** sudah dipindah ke `@twj.co.id` sesuai name card dan
+   email signature branding baru (situs lama masih `@kaptwj.com`).
 2. **Link sosial media** masih generik (`facebook.com`, `instagram.com`)
    persis seperti situs lama.
 3. **Foto Chaterine Tanuwijaya** belum ada — sementara monogram "CT".
