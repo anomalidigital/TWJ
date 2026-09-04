@@ -35,7 +35,7 @@ web/
 │   ├── js/main.js              vanilla JS, tanpa dependency
 │   ├── logo/                   logogram TWJ (mark-light dipakai, mark-navy
 │   │                           cadangan untuk background terang)
-│   └── img/                    hero, about, people/, clients/  (semua .webp)
+│   └── img/                    hero, about, people/, clients/, icons/
 └── _tools/
     ├── build.py                generator 5 halaman dari partial bersama
     ├── serve.py                local preview server
@@ -146,6 +146,17 @@ karena namanya diawali underscore.
 Karena semua link di halaman memakai relative path, situs ini jalan baik di
 subpath `/TWJ/` maupun nanti di root twj.co.id — tidak ada yang perlu diubah
 waktu pindah domain.
+
+## Ikon
+
+Ikon layanan dan industri memakai artwork dari klien di `assets/img/icons/`
+(PNG navy solid, transparan). Sumber aslinya hanya 35–51px, terlalu kecil untuk
+layar retina, jadi tiap file direkonstruksi ke 3x: siluetnya diperbesar 8x,
+tepinya dipertegas, lalu diturunkan ke 3x supaya anti-aliasing-nya terbentuk
+ulang dengan bersih. Bentuknya tidak berubah sama sekali.
+
+Kalau file vektornya (SVG atau AI) tersedia, sebaiknya dipakai — hasilnya akan
+tajam di resolusi berapa pun dan ukurannya lebih kecil.
 
 ## Optimasi gambar
 

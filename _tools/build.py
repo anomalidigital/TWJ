@@ -24,16 +24,18 @@ NAV = [
 WA = "https://wa.me/628119112147"
 
 # ---------------------------------------------------------------- icons
-I = {
-    "audit": '<path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5"/><circle cx="11" cy="13.2" r="2.7"/><path d="m12.9 15.1 2.5 2.5"/>',
-    "tax": '<path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5"/><path d="m9.2 17.2 5.6-6.4"/><circle cx="9.6" cy="11.4" r="1.1"/><circle cx="14.4" cy="16.6" r="1.1"/>',
-    "legal": '<path d="M12 3.4v16.8"/><path d="M7.6 20.2h8.8"/><path d="M4.4 7.6h15.2"/><path d="M4.4 7.6 2 14h4.8z"/><path d="M19.6 7.6 17.2 14H22z"/><path d="m8.4 5.7 3.6-1.5 3.6 1.5"/>',
-    "other": '<rect x="3.8" y="4.6" width="6.6" height="6.6"/><rect x="13.6" y="4.6" width="6.6" height="6.6"/><rect x="3.8" y="12.8" width="6.6" height="6.6"/><rect x="13.6" y="12.8" width="6.6" height="6.6"/>',
-    "private": '<path d="M12 3.1 19 5.7v5.6c0 4.2-2.9 7.7-7 9.6-4.1-1.9-7-5.4-7-9.6V5.7z"/><circle cx="12" cy="10.1" r="2.1"/><path d="M8.7 16.1c.6-1.7 1.8-2.6 3.3-2.6s2.7.9 3.3 2.6"/>',
-    "maritime": '<circle cx="12" cy="4.6" r="1.9"/><path d="M12 6.5V21"/><path d="M8.3 9.4h7.4"/><path d="M3.6 13.9c0 4 3.8 7.1 8.4 7.1s8.4-3.1 8.4-7.1"/><path d="M3.6 13.9h2.6M20.4 13.9h-2.6"/>',
-    "trade": '<path d="M3 8.6h13.4"/><path d="m12.8 5 3.6 3.6-3.6 3.6"/><path d="M21 15.4H7.6"/><path d="M11.2 11.8 7.6 15.4l3.6 3.6"/>',
-    "plantation": '<path d="M12 21v-7.6"/><path d="M12 13.4C12 9.8 9.3 6.9 6 6.9c0 3.6 2.7 6.5 6 6.5z"/><path d="M12 13.4c0-3 2.2-5.5 5-5.5 0 3-2.2 5.5-5 5.5z"/><path d="M7.6 21h8.8"/>',
-    "retail": '<path d="M4.4 10.2V20h15.2v-9.8"/><path d="M3 10.2 4.8 4.4h14.4L21 10.2z"/><path d="M9.6 20v-5.4h4.8V20"/><path d="M3 10.2h18"/>',
+# Supplied artwork in assets/img/icons — solid navy PNGs, one per service and
+# one per industry. Keys here map to the file names.
+ICONS = {
+    "audit": "audit",
+    "tax": "tax",
+    "legal": "legal",
+    "other": "other-services",
+    "private": "private-client-services",
+    "maritime": "maritime",
+    "trade": "trading",
+    "plantation": "plantation",
+    "retail": "retail",
 }
 SOCIAL = {
     "facebook": '<path d="M13.4 21v-8h2.7l.4-3.1h-3.1V7.9c0-.9.25-1.5 1.55-1.5h1.65V3.6c-.29-.04-1.27-.12-2.41-.12-2.38 0-4.01 1.45-4.01 4.12v2.3H7.5V13h2.68v8z"/>',
@@ -44,8 +46,7 @@ SOCIAL = {
 
 
 def icon(name):
-    return ('<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">%s</svg>'
-            % I[name])
+    return '<img src="assets/img/icons/%s.png" alt="" aria-hidden="true" loading="lazy">' % ICONS[name]
 
 
 def social(name):
