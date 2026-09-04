@@ -170,7 +170,10 @@ def header(page):
 <header class="header">
   <div class="shell">
     <a class="brand" href="index.html" aria-label="Tanuwijaya &amp; Partners — home">
-      <img src="assets/logo/mark-navy.svg" alt="Tanuwijaya &amp; Partners" width="286" height="147">
+      <span class="brand__mark">
+        <img class="mark-light" src="assets/logo/mark-light.svg" alt="Tanuwijaya &amp; Partners" width="306" height="144">
+        <img class="mark-dark" src="assets/logo/mark-navy.svg" alt="" aria-hidden="true" width="286" height="147">
+      </span>
     </a>
     <nav class="nav" aria-label="Primary">%s
     </nav>

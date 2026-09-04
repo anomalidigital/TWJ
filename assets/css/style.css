@@ -31,7 +31,8 @@
   --gutter: clamp(1.25rem, 5vw, 4.5rem);
   --section: clamp(2.6rem, 4.6vw, 4.5rem);
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);   /* movement */
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);   /* colour */
   --header-h: 88px;
 }
 
@@ -45,7 +46,6 @@
 html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
 body {
   margin: 0;
-  padding-top: var(--header-h);
   background: var(--luster);
   color: var(--slate);
   font-family: var(--sans);
@@ -154,9 +154,9 @@ ul { margin: 0; padding: 0; list-style: none; }
   line-height: 1;
   cursor: pointer;
   transition:
-    background-color 0.35s var(--ease-out),
-    border-color 0.35s var(--ease-out),
-    color 0.35s var(--ease-out);
+    background-color 0.45s var(--ease-soft),
+    border-color 0.45s var(--ease-soft),
+    color 0.45s var(--ease-soft);
 }
 .btn:hover,
 .btn:focus-visible {
@@ -164,7 +164,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   color: var(--btn-fg-on);
   border-color: var(--btn-bd-on);
 }
-.btn:active { background: var(--btn-bd-on); color: var(--btn-bg-on); transition-duration: 0.08s; }
+.btn:active { background: var(--btn-bd-on); color: var(--btn-bg-on); transition-duration: 0.14s; }
 .btn .arrow { transition: transform 0.35s var(--ease-out); }
 .btn:hover .arrow, .btn:focus-visible .arrow { transform: translateX(4px); }
 
@@ -188,17 +188,16 @@ ul { margin: 0; padding: 0; list-style: none; }
 .btn-row { display: flex; flex-wrap: wrap; gap: 0.9rem; margin-top: 1.7rem; }
 
 /* rows and cards answer the same way: a change of tone, not a lift */
-.acc__item { transition: background 0.35s var(--ease-out); }
+.acc__item { transition: background 0.45s var(--ease-soft); }
 .acc__item:hover { background: rgba(31, 58, 95, 0.025); }
 .acc__btn:active { opacity: 0.72; }
 .person__media, .clients__cell { transition: opacity 0.35s var(--ease-out); }
 
 /* ---------- 5. Header -------------------------------------- */
-/* Brand guideline: the mark sits on white or warm white, never on busy
-   photography, and the reverse lockup is for navy only. So the bar is a solid
-   Luster White plate at every scroll position and carries the primary mark.
-   What the scroll changes is the shadow and the gold hairline, both driven by
-   a 0-1 value written from JS so they arrive gradually. */
+/* Transparent while the banner is behind it, warm white once you scroll. Both
+   marks live in the DOM and cross-fade, as do the background and the link
+   colour, all reading the same 0-1 scroll value written from JS — so there is
+   no state that flips, only one continuous handover. */
 .header {
   position: fixed;
   inset: 0 0 auto;
@@ -206,23 +205,22 @@ ul { margin: 0; padding: 0; list-style: none; }
   height: var(--header-h);
   display: flex;
   align-items: center;
-  background: var(--luster);
-  border-bottom: 1px solid var(--line);
 }
 .header::before,
 .header::after {
   content: "";
   position: absolute;
   opacity: 0;
-  transition: opacity 0.35s var(--ease-out);
+  transition: opacity 0.4s var(--ease-soft);
   pointer-events: none;
 }
 .header::before {
   inset: 0;
+  background: var(--luster);
   box-shadow: 0 6px 18px rgba(31, 58, 95, 0.07);
 }
 .header::after {
-  inset: auto 0 -1px;
+  inset: auto 0 0;
   height: 1px;
   background: linear-gradient(90deg,
     rgba(200, 164, 93, 0) 0%,
@@ -236,10 +234,19 @@ ul { margin: 0; padding: 0; list-style: none; }
   opacity: var(--nav-on, 0);
   transition: none;
 }
-.header .shell { position: relative; }
-.header .shell { display: flex; align-items: center; justify-content: space-between; gap: 2rem; width: 100%; }
+.header .shell { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 2rem; width: 100%; }
+
 .brand { display: flex; align-items: center; }
-.brand img { height: 46px; width: auto; }
+.brand__mark { position: relative; display: block; height: 46px; }
+.brand__mark img { display: block; height: 100%; width: auto; }
+.brand__mark .mark-dark {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease-soft);
+}
+.header.is-solid .brand__mark .mark-dark { opacity: 1; }
+.header.is-tracking .brand__mark .mark-dark { opacity: var(--nav-on, 0); transition: none; }
 
 .nav { display: none; align-items: center; gap: clamp(1.4rem, 2.8vw, 2.8rem); }
 @media (min-width: 940px) { .nav { display: flex; } }
@@ -249,9 +256,23 @@ ul { margin: 0; padding: 0; list-style: none; }
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--slate);
+  color: var(--luster);
   padding-block: 0.4rem;
-  transition: color 0.3s var(--ease-out);
+  transition: color 0.4s var(--ease-soft);
+}
+.header.is-solid .nav a { color: var(--slate); }
+.nav a:hover, .nav a[aria-current="page"] { color: #ffffff; }
+.header.is-solid .nav a:hover,
+.header.is-solid .nav a[aria-current="page"] { color: var(--navy); }
+@supports (color: color-mix(in srgb, red, blue)) {
+  .header.is-tracking .nav a {
+    color: color-mix(in srgb, var(--slate) calc(var(--nav-on, 0) * 100%), var(--luster));
+    transition: none;
+  }
+  .header.is-tracking .nav a:hover,
+  .header.is-tracking .nav a[aria-current="page"] {
+    color: color-mix(in srgb, var(--navy) calc(var(--nav-on, 0) * 100%), #ffffff);
+  }
 }
 .nav a::after {
   content: "";
@@ -264,7 +285,6 @@ ul { margin: 0; padding: 0; list-style: none; }
   transition: transform 0.4s var(--ease-out);
 }
 .nav a:hover::after, .nav a[aria-current="page"]::after { transform: scaleX(1); transform-origin: left; }
-.nav a:hover, .nav a[aria-current="page"] { color: var(--navy); }
 
 .burger {
   display: inline-flex;
@@ -282,16 +302,18 @@ ul { margin: 0; padding: 0; list-style: none; }
   display: block;
   height: 1.5px;
   width: 26px;
-  background: var(--navy);
-  transition: transform 0.4s var(--ease-out), opacity 0.3s var(--ease-out);
+  background: var(--luster);
+  transition: transform 0.4s var(--ease-out), opacity 0.3s var(--ease-out),
+    background 0.4s var(--ease-soft);
 }
+.header.is-solid .burger span { background: var(--navy); }
 .burger[aria-expanded="true"] span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
 .burger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
 .burger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
 
 .drawer {
   position: fixed;
-  inset: calc(var(--header-h) * -1) 0 0;
+  inset: 0;
   z-index: 80;
   background: var(--navy);
   padding: calc(var(--header-h) + 3rem) var(--gutter) 3rem;
@@ -330,7 +352,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   min-height: min(78vh, 660px);
   display: flex;
   align-items: center;
-  padding-top: clamp(3rem, 6vw, 5rem);
+  padding-top: calc(var(--header-h) + clamp(2rem, 4vw, 3.5rem));
   padding-bottom: clamp(3rem, 6vw, 5rem);
   background: var(--navy-deep);
   overflow: hidden;
@@ -415,7 +437,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   transition: color 0.35s var(--ease);
 }
 .acc__btn:hover { color: var(--gold); }
-.acc__btn { transition: color 0.35s var(--ease-out), opacity 0.2s var(--ease-out); }
+.acc__btn { transition: color 0.45s var(--ease-soft), opacity 0.2s var(--ease-soft); }
 .acc__sign { position: relative; width: 16px; height: 16px; flex: 0 0 16px; }
 .acc__sign::before, .acc__sign::after {
   content: "";
@@ -549,7 +571,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   margin-top: 0.7rem;
   font-size: 0.85rem;
   border-bottom: 1px solid transparent;
-  transition: color 0.35s var(--ease-out), border-color 0.35s var(--ease-out);
+  transition: color 0.45s var(--ease-soft), border-color 0.45s var(--ease-soft);
   overflow-wrap: break-word;
 }
 /* on two narrow columns the address has to fit on one line, or it splits
@@ -720,7 +742,7 @@ a.company__url:hover { color: var(--gold); }
 .office dl > div { display: flex; gap: 0.6rem; min-width: 0; }
 .office dt { color: var(--silver); min-width: 46px; }
 .office dd { margin: 0; overflow-wrap: anywhere; min-width: 0; }
-.office address a { color: inherit; transition: color 0.35s var(--ease-out); }
+.office address a { color: inherit; transition: color 0.45s var(--ease-soft); }
 .office a:hover { color: var(--gold); }
 
 /* ---------- 15. Footer ------------------------------------- */
@@ -738,7 +760,7 @@ a.company__url:hover { color: var(--gold); }
 }
 .footer__brand img { height: 62px; width: auto; }
 .footer address { font-style: normal; font-size: 0.92rem; line-height: 1.85; overflow-wrap: anywhere; }
-.footer a { transition: color 0.35s var(--ease); }
+.footer a { transition: color 0.45s var(--ease-soft); }
 .footer a:hover { color: var(--gold); }
 .footer__hours { font-size: 0.92rem; margin: 0; }
 .footer__hours dt { color: rgba(244, 241, 236, 0.92); font-weight: 500; }

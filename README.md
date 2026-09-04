@@ -70,6 +70,8 @@ python _tools/build.py
 | `--slate` | `#6E6E6E` | body text |
 | `--silver` | `#B5B0AA` | garis, label sekunder |
 | `--gold` | `#C8A45D` | hairline di bawah heading, hover — maksimal 3% |
+| `--ease-out` | `cubic-bezier(.16,1,.3,1)` | untuk gerakan (transform) |
+| `--ease-soft` | `cubic-bezier(.4,0,.2,1)` | untuk perubahan warna |
 | `--ink-soft` | `#434343` | background footer |
 
 Rasio mengikuti Brand Guideline (Submission 2, 260520):
@@ -81,17 +83,14 @@ self-host ada di `_Shared/_Font/`.
 
 ## Interaksi
 
-- Header adalah bar solid Luster White di semua posisi scroll, memakai logo
-  navy primer. Ini mengikuti Brand Guideline: logo hanya boleh di atas putih /
-  warm white, versi reverse hanya di atas navy, dan tidak boleh di atas foto.
-  Yang berubah saat scroll cuma bayangan tipis dan garis emasnya, digerakkan
-  nilai 0-1 dari JS sepanjang 120px pertama supaya datang bertahap.
-  Selalu menempel di atas dan **tingginya tidak pernah berubah saat scroll** —
-  yang cross-fade hanya background dan garis emasnya, keduanya lewat `opacity`,
-  jadi tidak ada reflow, jeda, atau seam. Tinggi 88px di desktop, 66px di bawah
-  700px (breakpoint, bukan efek scroll).
-- Logo memakai logogram TWJ saja tanpa wordmark: versi navy primer di header,
-  versi reverse di footer.
+- Header transparan di atas banner dan jadi bar Luster White begitu discroll.
+  Kedua versi logo ada di DOM dan saling cross-fade, begitu juga background,
+  warna link, dan garis emasnya — semuanya membaca satu nilai 0-1 yang ditulis
+  JS sepanjang 120px pertama scroll. Jadi tidak ada state yang berganti
+  mendadak, hanya satu serah-terima yang menerus.
+- Logo memakai logogram TWJ saja tanpa wordmark: versi reverse saat header
+  transparan, versi navy primer saat header sudah putih, dan versi reverse di
+  footer.
 - Menu mobile: drawer full-screen navy.
 - Accordion partner di Home: selalu ada satu partner yang terbuka, dan fotonya
   square 1:1 sehingga tidak pernah menonjol keluar dari kolomnya.
