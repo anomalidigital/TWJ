@@ -146,7 +146,8 @@ ul { margin: 0; padding: 0; list-style: none; }
   text-transform: uppercase;
   cursor: pointer;
   overflow: hidden;
-  transition: color 0.4s var(--ease-out) 0.05s, border-color 0.4s var(--ease-out);
+  transition: color 0.4s var(--ease-out) 0.05s, border-color 0.4s var(--ease-out),
+    transform 0.16s var(--ease-out);
 }
 .btn span { position: relative; z-index: 1; }
 .btn::before {
@@ -160,6 +161,9 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 .btn:hover::before, .btn:focus-visible::before { transform: scaleX(1); transform-origin: left; }
 .btn:hover, .btn:focus-visible { color: var(--navy); }
+/* a small give on press, so the click itself has a transition too */
+.btn:active { transform: scale(0.985); }
+.acc__btn:active { opacity: 0.75; }
 .btn .arrow { position: relative; z-index: 1; transition: transform 0.45s var(--ease-out); }
 .btn:hover .arrow { transform: translateX(5px); }
 
@@ -393,6 +397,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   transition: color 0.35s var(--ease);
 }
 .acc__btn:hover { color: var(--gold); }
+.acc__btn { transition: color 0.35s var(--ease-out), opacity 0.2s var(--ease-out); }
 .acc__sign { position: relative; width: 16px; height: 16px; flex: 0 0 16px; }
 .acc__sign::before, .acc__sign::after {
   content: "";
