@@ -211,6 +211,23 @@ def sec_head(title, text=""):
         title, ('<p>%s</p>' % text) if text else "")
 
 
+SERVICES_HOME_ORDER = ["Audit", "Legal", "Tax", "Other Services"]
+
+
+def services_row():
+    """Home: one row of four, reading left to right, hairline between each."""
+    by_title = {t: (ic, t, lis) for ic, t, lis in SERVICES}
+    items = []
+    for title in SERVICES_HOME_ORDER:
+        ic, t, lis = by_title[title]
+        items.append("""<div class="svc" data-reveal>
+        <div class="svc__head"><span class="svc__icon">%s</span><h3>%s</h3></div>
+        <div class="svc__rule"></div>
+        <ul>%s</ul>
+      </div>""" % (icon(ic), t, "".join("<li>%s</li>" % i for i in lis)))
+    return '<div class="svc-row">%s</div>' % "".join(items)
+
+
 def services_grid():
     items = []
     for ic, title, lis in SERVICES:
@@ -359,7 +376,6 @@ def page_home():
       </div>
       <div class="partner-figure" data-reveal style="--d:120ms">
         <div class="partner-figure__img">%s</div>
-        <p class="partner-figure__caption"><b data-figure-caption>Linda Purnomo</b><span>Partner</span></p>
       </div>
     </div>
   </div>
@@ -367,18 +383,13 @@ def page_home():
 
 <section class="section section--luster" id="services">
   <div class="shell">
-    <div class="split-label">
-      <div class="split-label__aside">
-        <h2 class="h2" data-reveal>Our Services</h2>
-        <p data-reveal style="--d:60ms">Trusted by clients since 1999</p>
-      </div>
-      <div>%s</div>
-    </div>
+    %s
+    %s
   </div>
 </section>
 """ % (FOUNDING, btn("contact.html", "Get in touch", "btn--ghost"),
        "".join(acc), btn("our-people.html", "Get to know our team", "btn--ghost"),
-       "".join(figs), services_grid())
+       "".join(figs), sec_head("Our Services", "Trusted by clients since 1999"), services_row())
         + cta("Ready to Partner with us?",
               "Let&rsquo;s discuss how our tailored corporate services can support your business objectives and drive sustainable growth")
         + "</main>" + footer())

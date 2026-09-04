@@ -7,17 +7,12 @@
 
   /* ---- 1. Header: transparent over hero, solid on scroll ---- */
   var header = document.querySelector('.header');
-  function currentHero() {
-    return document.querySelector('#pages > .page:not([hidden]) .hero') || document.querySelector('.hero');
-  }
   function onScroll() {
     if (!header) return;
-    var y = window.scrollY;
-    var hero = currentHero();
-    // the bar stays put the whole way down; it only swaps from transparent
-    // (over the banner) to solid navy once the banner is behind you
-    var trigger = hero && hero.offsetHeight ? hero.offsetHeight * 0.55 : 10;
-    header.classList.toggle('is-solid', y > trigger);
+    // transparent only while the page is at rest at the top; the moment it
+    // moves the navy ground fades in, so the banner headline never runs
+    // underneath a see-through bar
+    header.classList.toggle('is-solid', window.scrollY > 8);
   }
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
@@ -83,8 +78,6 @@
       scope.querySelectorAll('[data-figure-target]').forEach(function (node) {
         node.classList.toggle('is-active', node.getAttribute('data-figure-target') === key);
       });
-      var cap = scope.querySelector('[data-figure-caption]');
-      if (cap) cap.textContent = btn.getAttribute('data-name') || cap.textContent;
     }
     function measure(panel) {
       panel.style.height = panel.firstElementChild.offsetHeight + 'px';

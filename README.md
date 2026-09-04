@@ -54,7 +54,7 @@ python _tools/build.py
 
 | Halaman | Section (urut) |
 |---|---|
-| Home | hero → Founding Story (foto kiri, teks tengah) → Our Partners → Our Services → CTA |
+| Home | hero → Founding Story (foto kiri, teks tengah) → Our Partners → Our Services (4 kolom kiri ke kanan) → CTA |
 | About Us | hero → Founding Story (teks + foto) → foto + teks → Clients → CTA |
 | Our People | hero → Partners → Associates → Companies → CTA |
 | Industries & Services | hero → Industries → Our Services → CTA |
@@ -81,16 +81,17 @@ self-host ada di `_Shared/_Font/`.
 
 ## Interaksi
 
-- Header transparan di atas banner, lalu jadi navy solid begitu banner lewat.
+- Header transparan hanya saat halaman diam di paling atas; begitu discroll
+   (8px) background navy langsung fade in, jadi headline banner tidak pernah
+   lewat di bawah bar transparan.
   Selalu menempel di atas dan **tingginya tidak pernah berubah saat scroll** —
   yang cross-fade hanya background dan garis emasnya, keduanya lewat `opacity`,
   jadi tidak ada reflow, jeda, atau seam. Tinggi 88px di desktop, 66px di bawah
   700px (breakpoint, bukan efek scroll).
 - Logo memakai logogram TWJ saja tanpa wordmark, di header maupun footer.
 - Menu mobile: drawer full-screen navy.
-- Accordion partner di Home: selalu ada satu partner yang terbuka, jadi foto di
-  sebelahnya selalu punya pemilik yang jelas, dan namanya tertulis di bawah foto.
-  Tinggi foto mengikuti tinggi kolom accordion, jadi tidak pernah menonjol keluar.
+- Accordion partner di Home: selalu ada satu partner yang terbuka, dan fotonya
+  square 1:1 sehingga tidak pernah menonjol keluar dari kolomnya.
 - Reveal on scroll (IntersectionObserver, hormat `prefers-reduced-motion`).
 - Semua foto dan logo klien tampil berwarna penuh (tanpa filter grayscale);
   hover hanya memberi sedikit zoom.

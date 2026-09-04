@@ -147,7 +147,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   cursor: pointer;
   overflow: hidden;
   transition: color 0.4s var(--ease-out) 0.05s, border-color 0.4s var(--ease-out),
-    transform 0.16s var(--ease-out);
+    transform 0.3s var(--ease-out), box-shadow 0.35s var(--ease-out);
 }
 .btn span { position: relative; z-index: 1; }
 .btn::before {
@@ -160,10 +160,22 @@ ul { margin: 0; padding: 0; list-style: none; }
   transition: transform 0.55s var(--ease-out);
 }
 .btn:hover::before, .btn:focus-visible::before { transform: scaleX(1); transform-origin: left; }
-.btn:hover, .btn:focus-visible { color: var(--navy); }
-/* a small give on press, so the click itself has a transition too */
-.btn:active { transform: scale(0.985); }
-.acc__btn:active { opacity: 0.75; }
+.btn:hover, .btn:focus-visible {
+  color: var(--navy);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(31, 58, 95, 0.16);
+}
+/* the press itself is animated too, not just the hover */
+.btn:active {
+  transform: translateY(0) scale(0.985);
+  box-shadow: none;
+  transition-duration: 0.09s;
+}
+.acc__btn:active { opacity: 0.72; }
+.acc__item { transition: background 0.4s var(--ease-out); }
+.acc__item:hover { background: rgba(31, 58, 95, 0.02); }
+.person, .company, .clients__cell { transition: transform 0.4s var(--ease-out); }
+.person:hover, .clients__cell:hover { transform: translateY(-3px); }
 .btn .arrow { position: relative; z-index: 1; transition: transform 0.45s var(--ease-out); }
 .btn:hover .arrow { transform: translateX(5px); }
 
@@ -414,38 +426,14 @@ ul { margin: 0; padding: 0; list-style: none; }
 .acc__panel > div { padding: 0 0 1.8rem; max-width: 58ch; }
 .acc__panel p { font-size: 0.98rem; }
 
-.partner-figure { position: relative; display: flex; flex-direction: column; }
-.partner-figure__caption {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-top: 0.85rem;
-  padding-top: 0.85rem;
-  border-top: 1px solid var(--line);
-  font-size: 0.66rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--silver);
-}
-.partner-figure__caption b {
-  color: var(--navy);
-  transition: opacity 0.35s var(--ease-out);
-}
-.partner-figure__img { position: relative; aspect-ratio: 4 / 5; overflow: hidden; background: var(--navy); }
-/* on two columns the portrait takes exactly the height of the accordion beside
-   it, so it can never run past the column and read as cut off */
-@media (min-width: 900px) {
-  .duo--top { align-items: stretch; }
-  .partner-figure { height: 100%; }
-  .partner-figure__img { flex: 1; aspect-ratio: auto; min-height: 420px; }
-}
+.partner-figure { position: relative; }
+.partner-figure__img { position: relative; aspect-ratio: 1 / 1; overflow: hidden; background: var(--navy); }
+
 .partner-figure__img img {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
   object-fit: cover;
-  object-position: center 22%;
+  object-position: center 18%;
   opacity: 0;
   transform: scale(1.04);
   transition: opacity 0.7s var(--ease), transform 0.9s var(--ease);
@@ -470,6 +458,14 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 
 /* ---------- 9. Services / Industries grids ----------------- */
+.svc-row { display: grid; grid-template-columns: 1fr; gap: 2rem 0; }
+@media (min-width: 640px) { .svc-row { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1040px) { .svc-row { grid-template-columns: repeat(4, 1fr); gap: 0; } }
+.svc-row .svc { padding: 0 clamp(1rem, 2vw, 1.9rem); border-left: 1px solid var(--line); }
+.svc-row .svc:first-child { border-left: 0; padding-left: 0; }
+@media (max-width: 639px) { .svc-row .svc { border-left: 0; padding-left: 0; } }
+@media (min-width: 640px) and (max-width: 1039px) { .svc-row .svc:nth-child(2n + 1) { border-left: 0; padding-left: 0; } }
+
 .svc-grid { display: grid; gap: clamp(1.8rem, 3vw, 2.6rem) clamp(1.8rem, 3.2vw, 3.2rem); }
 @media (min-width: 700px) { .svc-grid { grid-template-columns: 1fr 1fr; } }
 .svc__head { display: flex; align-items: center; gap: 0.9rem; }
@@ -537,17 +533,21 @@ ul { margin: 0; padding: 0; list-style: none; }
 .person__mail:hover { color: var(--navy); border-color: var(--gold); }
 
 /* ---------- 11. Companies ---------------------------------- */
-.companies {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.8rem 0;
+/* columns stay wide enough that a domain never has to break across lines */
+.companies { display: grid; grid-template-columns: 1fr; gap: 1.6rem 0; }
+@media (min-width: 560px) { .companies { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 880px) { .companies { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1300px) { .companies { grid-template-columns: repeat(6, 1fr); gap: 0; } }
+.company {
+  padding: 0 clamp(0.8rem, 1.4vw, 1.3rem);
+  border-left: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
 }
-@media (min-width: 700px) { .companies { grid-template-columns: repeat(3, 1fr); } }
-@media (min-width: 1080px) { .companies { grid-template-columns: repeat(6, 1fr); gap: 0; } }
-.company { padding: 0 clamp(0.8rem, 1.6vw, 1.5rem); border-left: 1px solid var(--line); }
 .company:first-child { border-left: 0; padding-left: 0; }
-@media (max-width: 699px) { .company:nth-child(2n + 1) { border-left: 0; padding-left: 0; } }
-@media (min-width: 700px) and (max-width: 1079px) { .company:nth-child(3n + 1) { border-left: 0; padding-left: 0; } }
+@media (max-width: 559px) { .company { border-left: 0; padding-left: 0; } }
+@media (min-width: 560px) and (max-width: 879px) { .company:nth-child(2n + 1) { border-left: 0; padding-left: 0; } }
+@media (min-width: 880px) and (max-width: 1299px) { .company:nth-child(3n + 1) { border-left: 0; padding-left: 0; } }
 .company__name {
   display: block;
   font-family: var(--serif);
@@ -558,10 +558,11 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 .company__url {
   display: block;
-  margin-top: 0.9rem;
-  font-size: 0.84rem;
+  margin-top: auto;
+  padding-top: 0.9rem;
+  font-size: 0.8rem;
   color: var(--slate);
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 a.company__url:hover { color: var(--gold); }
 
@@ -719,13 +720,15 @@ a.company__url:hover { color: var(--gold); }
 .social { display: flex; gap: 0.8rem; }
 .social a {
   width: 40px; height: 40px;
+  border-radius: 2px;
   border: 1px solid var(--line-invert);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   transition: background 0.4s var(--ease), border-color 0.4s var(--ease), color 0.4s var(--ease);
 }
-.social a:hover { background: var(--luster); border-color: var(--luster); color: var(--navy); }
+.social a:hover { background: var(--luster); border-color: var(--luster); color: var(--ink-soft); transform: translateY(-2px); }
+.social a { transition: background 0.4s var(--ease-out), border-color 0.4s var(--ease-out), color 0.4s var(--ease-out), transform 0.3s var(--ease-out); }
 .social svg { width: 17px; height: 17px; fill: currentColor; }
 
 /* ---------- 16. Floating WhatsApp -------------------------- */
