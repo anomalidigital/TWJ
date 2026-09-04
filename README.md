@@ -12,10 +12,13 @@ Static HTML biasa — tidak perlu build tool, tidak perlu framework.
 Karena halaman memakai relative path, buka lewat local server (bukan `file://`):
 
 ```bash
-python -m http.server 8123
+python _tools/serve.py
 ```
 
-Lalu buka <http://127.0.0.1:8123/>.
+Lalu buka <http://127.0.0.1:8123/>. Pakai skrip ini, bukan
+`python -m http.server` — yang bawaan mati kena `ConnectionResetError` kalau
+browser memutus koneksi di tengah respons. Skrip ini juga mematikan cache,
+jadi hasil rebuild langsung kelihatan begitu di-refresh.
 
 ## Struktur
 
@@ -34,6 +37,7 @@ web/
 │   └── img/                    hero, about, people/, clients/  (semua .webp)
 └── _tools/
     ├── build.py                generator 5 halaman dari partial bersama
+    ├── serve.py                local preview server
     ├── bundle.py               generator preview 1-file (untuk share link)
     └── twj-preview.html        hasil bundle (2,2 MB, self-contained — di-gitignore)
 ```
