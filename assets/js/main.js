@@ -7,15 +7,24 @@
 
   /* ---- 1. Header: transparent over hero, solid on scroll ---- */
   var header = document.querySelector('.header');
-  function onScroll() {
+  var ticking = false;
+  function paintHeader() {
+    ticking = false;
     if (!header) return;
-    // transparent only while the page is at rest at the top; the moment it
-    // moves the navy ground fades in, so the banner headline never runs
-    // underneath a see-through bar
-    header.classList.toggle('is-solid', window.scrollY > 8);
+    // the navy ground comes in gradually across the first 120px of scroll, so
+    // it reads as the bar settling rather than a state flipping
+    var t = Math.min(1, Math.max(0, (window.scrollY - 6) / 120));
+    header.style.setProperty('--nav-on', t.toFixed(3));
+    header.classList.toggle('is-solid', t > 0.5);
   }
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(paintHeader);
+  }
+  if (header) header.classList.add('is-tracking');
   window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+  paintHeader();
 
   /* ---- 2. Mobile drawer ------------------------------------ */
   var burger = document.querySelector('.burger');

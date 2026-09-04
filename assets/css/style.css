@@ -128,15 +128,22 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 
 /* ---------- 4. Buttons ------------------------------------- */
+/* One box, one set of custom properties, one transition list. There is no
+   overlay layer and no stacking context: a variant only restates its colours,
+   and every state animates the same four properties. */
 .btn {
   --btn-bg: var(--navy);
   --btn-fg: var(--luster);
   --btn-bd: var(--navy);
-  position: relative;
+  --btn-bg-on: var(--navy-deep);
+  --btn-fg-on: var(--luster);
+  --btn-bd-on: var(--navy-deep);
+  --btn-shadow: rgba(22, 41, 63, 0.26);
+
   display: inline-flex;
   align-items: center;
-  gap: 0.85rem;
-  padding: 1.05rem 2.1rem;
+  gap: 0.8rem;
+  padding: 1rem 2rem;
   background: var(--btn-bg);
   color: var(--btn-fg);
   border: 1px solid var(--btn-bd);
@@ -145,49 +152,55 @@ ul { margin: 0; padding: 0; list-style: none; }
   letter-spacing: 0.18em;
   text-transform: uppercase;
   cursor: pointer;
-  overflow: hidden;
-  transition: color 0.4s var(--ease-out) 0.05s, border-color 0.4s var(--ease-out),
-    transform 0.3s var(--ease-out), box-shadow 0.35s var(--ease-out);
+  transition:
+    background-color 0.3s var(--ease-out),
+    border-color 0.3s var(--ease-out),
+    color 0.3s var(--ease-out),
+    box-shadow 0.3s var(--ease-out),
+    transform 0.3s var(--ease-out);
 }
-.btn span { position: relative; z-index: 1; }
-.btn::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--luster);
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.55s var(--ease-out);
-}
-.btn:hover::before, .btn:focus-visible::before { transform: scaleX(1); transform-origin: left; }
-.btn:hover, .btn:focus-visible {
-  color: var(--navy);
+.btn:hover,
+.btn:focus-visible {
+  background: var(--btn-bg-on);
+  border-color: var(--btn-bd-on);
+  color: var(--btn-fg-on);
   transform: translateY(-2px);
-  box-shadow: 0 12px 24px rgba(31, 58, 95, 0.16);
+  box-shadow: 0 10px 22px var(--btn-shadow);
 }
-/* the press itself is animated too, not just the hover */
 .btn:active {
-  transform: translateY(0) scale(0.985);
-  box-shadow: none;
-  transition-duration: 0.09s;
+  transform: translateY(0);
+  box-shadow: 0 2px 6px var(--btn-shadow);
+  transition-duration: 0.1s;
 }
-.acc__btn:active { opacity: 0.72; }
-.acc__item { transition: background 0.4s var(--ease-out); }
-.acc__item:hover { background: rgba(31, 58, 95, 0.02); }
-.person, .company, .clients__cell { transition: transform 0.4s var(--ease-out); }
-.person:hover, .clients__cell:hover { transform: translateY(-3px); }
-.btn .arrow { position: relative; z-index: 1; transition: transform 0.45s var(--ease-out); }
-.btn:hover .arrow { transform: translateX(5px); }
+.btn .arrow { transition: transform 0.3s var(--ease-out); }
+.btn:hover .arrow,
+.btn:focus-visible .arrow { transform: translateX(4px); }
 
-.btn--ghost { --btn-bg: transparent; --btn-fg: var(--navy); --btn-bd: var(--line); }
-.btn--ghost::before { background: var(--navy); }
-.btn--ghost:hover, .btn--ghost:focus-visible { color: var(--luster); border-color: var(--navy); }
-
-.btn--solidLight { --btn-bg: var(--luster); --btn-fg: var(--navy); --btn-bd: var(--luster); }
-.btn--solidLight::before { background: var(--gold); }
-.btn--solidLight:hover, .btn--solidLight:focus-visible { color: var(--navy); border-color: var(--gold); }
-
+.btn--ghost {
+  --btn-bg: transparent;
+  --btn-fg: var(--navy);
+  --btn-bd: var(--line);
+  --btn-bg-on: var(--navy);
+  --btn-fg-on: var(--luster);
+  --btn-bd-on: var(--navy);
+}
+.btn--solidLight {
+  --btn-bg: var(--luster);
+  --btn-fg: var(--navy);
+  --btn-bd: var(--luster);
+  --btn-bg-on: var(--gold);
+  --btn-fg-on: var(--ink-soft);
+  --btn-bd-on: var(--gold);
+  --btn-shadow: rgba(0, 0, 0, 0.34);
+}
 .btn-row { display: flex; flex-wrap: wrap; gap: 0.9rem; margin-top: 1.7rem; }
+
+/* the same lift, shared by the rows and cards */
+.acc__item { transition: background 0.35s var(--ease-out); }
+.acc__item:hover { background: rgba(31, 58, 95, 0.025); }
+.acc__btn:active { opacity: 0.72; }
+.person, .clients__cell { transition: transform 0.35s var(--ease-out); }
+.person:hover, .clients__cell:hover { transform: translateY(-3px); }
 
 /* ---------- 5. Header -------------------------------------- */
 /* The bar never changes size on scroll — a height animation is what made it
@@ -206,7 +219,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   content: "";
   position: absolute;
   opacity: 0;
-  transition: opacity 0.5s var(--ease-out);
+  transition: opacity 0.35s var(--ease-out);
   pointer-events: none;
 }
 .header::before { inset: 0; background: var(--navy); }
@@ -220,6 +233,13 @@ ul { margin: 0; padding: 0; list-style: none; }
     rgba(200, 164, 93, 0) 100%);
 }
 .header.is-solid::before, .header.is-solid::after { opacity: 1; }
+/* with JS running the ground fades in progressively over the first 120px of
+   scroll rather than switching at a threshold */
+.header.is-tracking::before,
+.header.is-tracking::after {
+  opacity: var(--nav-on, 0);
+  transition: none;
+}
 .header .shell { position: relative; }
 .header .shell { display: flex; align-items: center; justify-content: space-between; gap: 2rem; width: 100%; }
 .brand { display: flex; align-items: center; }
@@ -368,6 +388,8 @@ ul { margin: 0; padding: 0; list-style: none; }
   border: 1px solid var(--silver);
 }
 .figure--layered img { position: relative; }
+.figure--mirror { padding: 0 0 14px 14px; }
+.figure--mirror::before { inset: 14px 14px 0 0; }
 
 /* thin rule set inside the photo */
 .figure--inset::after {
@@ -433,7 +455,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   position: absolute; inset: 0;
   width: 100%; height: 100%;
   object-fit: cover;
-  object-position: center 18%;
+  object-position: center top;
   opacity: 0;
   transform: scale(1.04);
   transition: opacity 0.7s var(--ease), transform 0.9s var(--ease);

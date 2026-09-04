@@ -421,7 +421,7 @@ def page_about():
       <div class="duo__text">
         <p class="lead" data-reveal>%s</p>
       </div>
-      <div class="figure" data-reveal style="--d:120ms">
+      <div class="figure figure--layered figure--mirror" data-reveal style="--d:120ms">
         <img class="ratio-3x2" src="assets/img/about-office.webp" alt="The Tanuwijaya &amp; Partners office" loading="lazy" width="1500" height="1000">
       </div>
     </div>
