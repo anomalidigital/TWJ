@@ -33,6 +33,7 @@
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);   /* movement */
   --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);   /* colour */
+  --ease-swap: cubic-bezier(0.65, 0, 0.35, 1); /* two-colour swap */
   --header-h: 88px;
 }
 
@@ -153,19 +154,33 @@ ul { margin: 0; padding: 0; list-style: none; }
   text-transform: uppercase;
   line-height: 1;
   cursor: pointer;
+  /* Leaving state. The hover is a full inversion, so background and label
+     meet at the same colour half way through — an ease-in-out crosses that
+     point quickly and settles slowly at both ends, which reads as a swap
+     rather than a flicker. Leaving is a touch longer than entering. */
   transition:
-    background-color 0.45s var(--ease-soft),
-    border-color 0.45s var(--ease-soft),
-    color 0.45s var(--ease-soft);
+    background-color 0.55s var(--ease-swap),
+    border-color 0.55s var(--ease-swap),
+    color 0.55s var(--ease-swap),
+    transform 0.12s var(--ease-soft);
 }
 .btn:hover,
 .btn:focus-visible {
   background: var(--btn-bg-on);
   color: var(--btn-fg-on);
   border-color: var(--btn-bd-on);
+  /* entering: slightly quicker, so the button answers the cursor */
+  transition:
+    background-color 0.4s var(--ease-swap),
+    border-color 0.4s var(--ease-swap),
+    color 0.4s var(--ease-swap),
+    transform 0.12s var(--ease-soft);
 }
-.btn:active { background: var(--btn-bd-on); color: var(--btn-bg-on); transition-duration: 0.14s; }
-.btn .arrow { transition: transform 0.35s var(--ease-out); }
+/* the press keeps the hover colours and only settles a pixel — restating the
+   colours here made a click flip back to the resting state and out again */
+.btn:active { transform: translateY(1px); }
+.btn .arrow { transition: transform 0.5s var(--ease-out); }
+.btn:hover .arrow, .btn:focus-visible .arrow { transition-duration: 0.38s; }
 .btn:hover .arrow, .btn:focus-visible .arrow { transform: translateX(4px); }
 
 .btn--ghost {
@@ -184,7 +199,6 @@ ul { margin: 0; padding: 0; list-style: none; }
   --btn-fg-on: var(--luster);
   --btn-bd-on: var(--luster);
 }
-.btn--solidLight:active { background: var(--gold); color: var(--ink-soft); border-color: var(--gold); }
 .btn-row { display: flex; flex-wrap: wrap; gap: 0.9rem; margin-top: 1.7rem; }
 
 /* rows and cards answer the same way: a change of tone, not a lift */
@@ -239,14 +253,15 @@ ul { margin: 0; padding: 0; list-style: none; }
 .brand { display: flex; align-items: center; }
 .brand__mark { position: relative; display: block; height: 46px; }
 .brand__mark img { display: block; height: 100%; width: auto; }
-.brand__mark .mark-dark {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transition: opacity 0.4s var(--ease-soft);
-}
+.brand__mark .mark-light,
+.brand__mark .mark-dark { transition: opacity 0.4s var(--ease-soft); }
+.brand__mark .mark-dark { position: absolute; inset: 0; opacity: 0; }
 .header.is-solid .brand__mark .mark-dark { opacity: 1; }
+/* the outgoing mark has to leave as the incoming one arrives, or both sit on
+   top of each other and the W reads doubled */
+.header.is-solid .brand__mark .mark-light { opacity: 0; }
 .header.is-tracking .brand__mark .mark-dark { opacity: var(--nav-on, 0); transition: none; }
+.header.is-tracking .brand__mark .mark-light { opacity: calc(1 - var(--nav-on, 0)); transition: none; }
 
 .nav { display: none; align-items: center; gap: clamp(1.4rem, 2.8vw, 2.8rem); }
 @media (min-width: 940px) { .nav { display: flex; } }
@@ -453,6 +468,23 @@ ul { margin: 0; padding: 0; list-style: none; }
 .acc__panel { overflow: hidden; height: 0; transition: height 0.55s var(--ease-out); }
 .acc__panel > div { padding: 0 0 1.8rem; max-width: 58ch; }
 .acc__panel p { font-size: 0.98rem; }
+.acc__panel ul { margin-top: 1rem; }
+.acc__panel li {
+  position: relative;
+  padding-left: 1.15rem;
+  font-size: 0.93rem;
+  line-height: 1.7;
+  color: var(--slate);
+}
+.acc__panel li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.85em;
+  width: 7px;
+  height: 1px;
+  background: var(--gold);
+}
 
 .partner-figure { position: relative; }
 .partner-figure__img { position: relative; aspect-ratio: 1 / 1; overflow: hidden; background: var(--navy); }
