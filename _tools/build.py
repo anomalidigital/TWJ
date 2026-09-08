@@ -72,34 +72,33 @@ CLIENTS_TEXT = ("Trusted by private and corporate clients, industry leaders, inc
                 "foreign-owned, state-owned and public listed companies, multinational enterprises, "
                 "and international organizations")
 
+# The partner bios are the client's own words, kept verbatim: the wording,
+# punctuation and sentence order are theirs, not ours. Linda's comes from the
+# brief document, David's and Chaterine's from the text the client sent.
 PARTNERS = [
     ("linda", "Linda Purnomo", "assets/img/people/linda-purnomo.webp", "LP",
      ["Linda is the founding partner who has been in the industry for over 40 years. She specializes in "
-      "accounting and tax, and her clients have maintained relationship with her throughout her career. "
+      "accounting, tax, and her clients has maintained relationship with her throughout her career. "
       "She has experience in almost all industry, ranging from plantation, real estate, manufacturing, "
-      "multi-finance, insurance, shipping and shipyard."],
-     []),
+      "multi-finance, insurance, shipping, shipyard."]),
     ("david", "David Tanuwijaya", "assets/img/people/david-tanuwijaya.webp", "DT",
-     ["David is based in Jakarta and leads the firm&rsquo;s focus on creating values for clients&rsquo; "
+     ["David is based in Jakarta and leads the firm&rsquo;s focus on creating values for clients' "
       "organization. Before becoming managing partner, David has worked for big four accounting firms "
-      "(PricewaterhouseCoopers and Ernst &amp; Young) and as a manager in prominent multinational and "
+      "(Pricewaterhouse Coopers and Ernst &amp; Young) and as a manager in prominent multinational and "
       "conglomerate firms such as Credit Suisse, Royal Dutch Shell, and Sinarmas group. He has worked in "
-      "Indonesia, UK and Switzerland."],
-     ["Master of Business Administration, Manchester Business School",
-      "Certified Public Accountant (CPA), Certified Financial Investigator (CFI), Chartered Accountant (CA)",
-      "Member of The Institute of Public Accountant (IAPI)",
-      "Holds a Capital Market License from OJK"]),
+      "Indonesia, UK and Switzerland. He has a Master of Business Administration degree from Manchester "
+      "Business School. David is a Certified Public Accountant (CPA), Certified Financial Investigator "
+      "(CFI), Chartered Accountant (CA) and a member of The Institute of Public Accountant (IAPI) David "
+      "holds a Capital Market License from OJK."]),
     ("chaterine", "Chaterine Tanuwijaya", "", "CT",
-     ["Chaterine advises foreign investment and local companies, representative office, permanent "
+     ["Catherine advise foreign investment and local companies, representative office, permanent "
       "establishment and foundations. She also specializes in private clients (HNWI and UHNWI), both local "
-      "and foreign. Prior to joining the family firm, she has worked for a major law firm in Jakarta and "
+      "and foreign. Prior to joining the family firm, she has worked for a major law-firm in Jakarta and "
       "Singapore where she handled matters related to investment, joint venture, M&amp;A and aviation. She "
-      "now leads the tax practice of the firm."],
-     ["Bachelor of Law, University of Indonesia",
-      "Master of International Tax Law, International Tax Center Leiden, the Netherlands",
-      "Admitted to bar (PERADI) in Indonesia",
-      "Certified Tax Consultant (KP A &amp; B), Certified Legal Auditor (CLA)",
-      "Member of Ikatan Konsultan Pajak Indonesia (IKPI)"]),
+      "now leads the tax practice of the firm. She holds a bachelor degree in Law from the University of "
+      "Indonesia and a Master of International Tax Law degree from International Tax Center Leiden, the "
+      "Netherlands. Chaterine is admitted to bar (PERADI) in Indonesia, a Certified Tax Consultant "
+      "(KP A &amp; B), Certified Legal Auditor (CLA), and member of Ikatan Konsultan Pajak Indonesia (IKPI)."]),
 ]
 
 TEAM_PARTNERS = [
@@ -354,10 +353,8 @@ def footer():
 # ---------------------------------------------------------------- pages
 def page_home():
     acc, figs = [], []
-    for i, (key, name, img, initials, paras, creds) in enumerate(PARTNERS):
+    for i, (key, name, img, initials, paras) in enumerate(PARTNERS):
         body = "".join("<p>%s</p>" % t for t in paras)
-        if creds:
-            body += "<ul>%s</ul>" % "".join("<li>%s</li>" % c for c in creds)
         acc.append("""<div class="acc__item">
         <button class="acc__btn" type="button" aria-expanded="%s" aria-controls="p-%s" data-figure="%s" data-name="%s">
           <span>%s</span><span class="acc__sign" aria-hidden="true"></span>

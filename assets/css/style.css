@@ -468,23 +468,6 @@ ul { margin: 0; padding: 0; list-style: none; }
 .acc__panel { overflow: hidden; height: 0; transition: height 0.55s var(--ease-out); }
 .acc__panel > div { padding: 0 0 1.8rem; max-width: 58ch; }
 .acc__panel p { font-size: 0.98rem; }
-.acc__panel ul { margin-top: 1rem; }
-.acc__panel li {
-  position: relative;
-  padding-left: 1.15rem;
-  font-size: 0.93rem;
-  line-height: 1.7;
-  color: var(--slate);
-}
-.acc__panel li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.85em;
-  width: 7px;
-  height: 1px;
-  background: var(--gold);
-}
 
 .partner-figure { position: relative; }
 .partner-figure__img { position: relative; aspect-ratio: 1 / 1; overflow: hidden; background: var(--navy); }
