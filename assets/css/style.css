@@ -33,7 +33,7 @@
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);   /* movement */
   --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);   /* colour */
-  --ease-swap: cubic-bezier(0.65, 0, 0.35, 1); /* two-colour swap */
+  --ease-swap: linear; /* colour blends evenly — easing makes them read as snaps */
   --header-h: 88px;
 }
 
@@ -159,9 +159,9 @@ ul { margin: 0; padding: 0; list-style: none; }
      point quickly and settles slowly at both ends, which reads as a swap
      rather than a flicker. Leaving is a touch longer than entering. */
   transition:
-    background-color 0.55s var(--ease-swap),
-    border-color 0.55s var(--ease-swap),
-    color 0.55s var(--ease-swap),
+    background-color 0.46s var(--ease-swap),
+    border-color 0.46s var(--ease-swap),
+    color 0.46s var(--ease-swap),
     transform 0.12s var(--ease-soft);
 }
 .btn:hover,
@@ -171,9 +171,9 @@ ul { margin: 0; padding: 0; list-style: none; }
   border-color: var(--btn-bd-on);
   /* entering: slightly quicker, so the button answers the cursor */
   transition:
-    background-color 0.4s var(--ease-swap),
-    border-color 0.4s var(--ease-swap),
-    color 0.4s var(--ease-swap),
+    background-color 0.38s var(--ease-swap),
+    border-color 0.38s var(--ease-swap),
+    color 0.38s var(--ease-swap),
     transform 0.12s var(--ease-soft);
 }
 /* the press keeps the hover colours and only settles a pixel — restating the
@@ -184,7 +184,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .btn:hover .arrow, .btn:focus-visible .arrow { transform: translateX(4px); }
 
 .btn--ghost {
-  --btn-bg: transparent;
+  --btn-bg: rgba(31, 58, 95, 0);
   --btn-fg: var(--navy);
   --btn-bd: var(--silver);
   --btn-bg-on: var(--navy);
@@ -195,7 +195,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   --btn-bg: var(--luster);
   --btn-fg: var(--navy);
   --btn-bd: var(--luster);
-  --btn-bg-on: transparent;
+  --btn-bg-on: rgba(244, 241, 236, 0);
   --btn-fg-on: var(--luster);
   --btn-bd-on: var(--luster);
 }
@@ -246,7 +246,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .header.is-tracking::before,
 .header.is-tracking::after {
   opacity: var(--nav-on, 0);
-  transition: none;
+  transition: opacity 0.22s linear;
 }
 .header .shell { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 2rem; width: 100%; }
 
@@ -260,8 +260,8 @@ ul { margin: 0; padding: 0; list-style: none; }
 /* the outgoing mark has to leave as the incoming one arrives, or both sit on
    top of each other and the W reads doubled */
 .header.is-solid .brand__mark .mark-light { opacity: 0; }
-.header.is-tracking .brand__mark .mark-dark { opacity: var(--nav-on, 0); transition: none; }
-.header.is-tracking .brand__mark .mark-light { opacity: calc(1 - var(--nav-on, 0)); transition: none; }
+.header.is-tracking .brand__mark .mark-dark { opacity: var(--nav-on, 0); transition: opacity 0.22s linear; }
+.header.is-tracking .brand__mark .mark-light { opacity: calc(1 - var(--nav-on, 0)); transition: opacity 0.22s linear; }
 
 .nav { display: none; align-items: center; gap: clamp(1.4rem, 2.8vw, 2.8rem); }
 @media (min-width: 940px) { .nav { display: flex; } }
@@ -282,7 +282,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 @supports (color: color-mix(in srgb, red, blue)) {
   .header.is-tracking .nav a {
     color: color-mix(in srgb, var(--slate) calc(var(--nav-on, 0) * 100%), var(--luster));
-    transition: none;
+    transition: color 0.22s linear;
   }
   .header.is-tracking .nav a:hover,
   .header.is-tracking .nav a[aria-current="page"] {

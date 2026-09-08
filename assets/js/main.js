@@ -7,45 +7,25 @@
 
   /* ---- 1. Header: transparent over hero, solid on scroll ---- */
   var header = document.querySelector('.header');
-  var navTarget = 0;   // where the scroll position says the bar should be
-  var navValue = 0;    // where it actually is, easing towards the target
   var navRaf = 0;
-  var navLast = 0;
 
-  function readNavTarget() {
-    navTarget = Math.min(1, Math.max(0, (window.scrollY - 6) / 180));
-  }
-  function writeNav() {
-    header.style.setProperty('--nav-on', navValue.toFixed(3));
-    header.classList.toggle('is-solid', navValue > 0.5);
-  }
-  // Tying the ground straight to the scroll offset made it snap: one notch of
-  // a wheel is most of the ramp, so the fade was over before it read as one.
-  // The displayed value now chases the target with a time constant, which
-  // keeps it gradual however fast the page is scrolled, in both directions.
-  function stepNav(now) {
+  // The ground follows the scroll evenly across the ramp — no easing and no
+  // chase. An exponential chase put 40% of the fade into the first 80ms and
+  // then crawled, which reads as a snap; a plain proportion plus the short
+  // linear transition in CSS smooths each wheel step without bending the rate.
+  function paintHeader() {
     navRaf = 0;
-    var dt = navLast ? Math.min(64, now - navLast) : 16;
-    navLast = now;
-    navValue += (navTarget - navValue) * (1 - Math.pow(0.0015, dt / 1000));
-    if (Math.abs(navTarget - navValue) < 0.002) navValue = navTarget;
-    writeNav();
-    if (navValue !== navTarget) navRaf = requestAnimationFrame(stepNav);
-    else navLast = 0;
+    if (!header) return;
+    var t = Math.min(1, Math.max(0, (window.scrollY - 6) / 200));
+    header.style.setProperty('--nav-on', t.toFixed(3));
+    header.classList.toggle('is-solid', t > 0.5);
   }
   function onScroll() {
-    if (!header) return;
-    readNavTarget();
-    if (reduce) { navValue = navTarget; writeNav(); return; }
-    if (!navRaf) navRaf = requestAnimationFrame(stepNav);
+    if (!navRaf) navRaf = requestAnimationFrame(paintHeader);
   }
-  if (header) {
-    header.classList.add('is-tracking');
-    readNavTarget();
-    navValue = navTarget;
-    writeNav();
-  }
+  if (header) header.classList.add('is-tracking');
   window.addEventListener('scroll', onScroll, { passive: true });
+  paintHeader();
 
   /* ---- 2. Mobile drawer ------------------------------------ */
   var burger = document.querySelector('.burger');
