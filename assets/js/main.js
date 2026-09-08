@@ -9,21 +9,26 @@
   var header = document.querySelector('.header');
   var navRaf = 0;
 
-  // The ground follows the scroll evenly across the ramp — no easing and no
-  // chase. An exponential chase put 40% of the fade into the first 80ms and
-  // then crawled, which reads as a snap; a plain proportion plus the short
-  // linear transition in CSS smooths each wheel step without bending the rate.
+  var solid = false;
+
+  // Scroll says when the header changes, not how fast. Reading the fade
+  // straight off the scroll position handed its timing to the wheel: a flick
+  // covers the ramp in a fifth of a second, and stopping part way left the bar
+  // parked half white. Crossing the line now starts the fixed fade in CSS. The
+  // line sits lower on the way back up so a scroll that rests near it cannot
+  // flutter between the two states.
   function paintHeader() {
     navRaf = 0;
     if (!header) return;
-    var t = Math.min(1, Math.max(0, (window.scrollY - 6) / 200));
-    header.style.setProperty('--nav-on', t.toFixed(3));
-    header.classList.toggle('is-solid', t > 0.5);
+    var y = window.scrollY;
+    var next = solid ? y > 18 : y > 46;
+    if (next === solid) return;
+    solid = next;
+    header.classList.toggle('is-solid', solid);
   }
   function onScroll() {
     if (!navRaf) navRaf = requestAnimationFrame(paintHeader);
   }
-  if (header) header.classList.add('is-tracking');
   window.addEventListener('scroll', onScroll, { passive: true });
   paintHeader();
 
