@@ -9,3 +9,6 @@ _tools/twj-preview.html
 # python
 __pycache__/
 *.pyc
+
+# reference snippet dropped in for the button brief, not part of the site
+Button.html

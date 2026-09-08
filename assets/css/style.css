@@ -142,72 +142,109 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 
 /* ---------- 4. Buttons ------------------------------------- */
-/* Flat by design: no lift, no shadow, no overlay layer. A button answers by
-   inverting its own two colours, which is legible at a glance and matches the
-   hairline-and-plane language of the rest of the page. */
+/* The answer to a hover is a plane that wipes across, not a colour that
+   dissolves. Movement is what easing was made for — it has inertia, so a curve
+   reads as weight rather than as a snap.
+   The label is set twice, once in each colour, and the second copy is clipped
+   to exactly the same edge as the plane. So every letter is always the right
+   colour for whatever is under it, and the wipe cuts through the type as it
+   passes. Changing one label's colour instead — however it was timed — left
+   part of it sitting on the wrong plane and reading as a flash.
+   Both layers animate the same property, on the same curve, so the edge of the
+   plane and the edge of the type can never drift apart.
+   Corners stay square: this is a plane sliding under a hairline, and a radius
+   would soften the edge the whole page is built on. */
 .btn {
-  --btn-bg: var(--navy);
-  --btn-fg: var(--luster);
+  --btn-bg: var(--navy);       /* the plane it rests on */
+  --btn-fg: var(--luster);     /* the label at rest */
   --btn-bd: var(--navy);
-  --btn-bg-on: var(--luster);
-  --btn-fg-on: var(--navy);
+  --btn-fill: var(--luster);   /* the plane that wipes across */
+  --btn-fg-on: var(--navy);    /* the label once it has */
   --btn-bd-on: var(--navy);
+  --btn-wipe: 0.55s;
 
+  position: relative;
+  isolation: isolate;
   display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
+  justify-content: center;
   padding: 0.95rem 1.9rem;
   background: var(--btn-bg);
   color: var(--btn-fg);
   border: 1px solid var(--btn-bd);
+  border-radius: 0;
+  font-family: var(--sans);
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   line-height: 1;
   cursor: pointer;
-  /* Leaving state. The hover is a full inversion, so background and label
-     meet at the same colour half way through — an ease-in-out crosses that
-     point quickly and settles slowly at both ends, which reads as a swap
-     rather than a flicker. Leaving is a touch longer than entering. */
-  transition:
-    background-color 0.46s var(--ease-swap),
-    border-color 0.46s var(--ease-swap),
-    color 0.46s var(--ease-swap),
-    transform 0.12s var(--ease-soft);
+  transition: border-color var(--btn-wipe) var(--ease-out), transform 0.12s var(--ease-soft);
 }
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--btn-fill);
+}
+/* The two faces are exact complements: the resting one gives up the width the
+   arriving one takes, so their glyphs never overlap and no edge is drawn
+   twice. Same property, same curve, same duration as the plane, so the type
+   is cut at exactly the plane's edge. */
+.btn__face {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.btn__face--on {
+  position: absolute;
+  inset: 0;
+  justify-content: center;
+  color: var(--btn-fg-on);
+}
+.btn::before,
+.btn__face,
+.btn__face--on { transition: clip-path var(--btn-wipe) var(--ease-out); }
+.btn::before,
+.btn__face--on { clip-path: inset(0 100% 0 0); }
+/* :not() matters — the arriving face carries both classes, so a bare
+   .btn__face rule placed after it would un-clip it and show both labels */
+.btn__face:not(.btn__face--on) { clip-path: inset(0 0 0 0); }
+
 .btn:hover,
 .btn:focus-visible {
-  background: var(--btn-bg-on);
-  color: var(--btn-fg-on);
   border-color: var(--btn-bd-on);
-  /* entering: slightly quicker, so the button answers the cursor */
-  transition:
-    background-color 0.38s var(--ease-swap),
-    border-color 0.38s var(--ease-swap),
-    color 0.38s var(--ease-swap),
-    transform 0.12s var(--ease-soft);
+  /* entering is quicker, so the button answers the cursor */
+  --btn-wipe: 0.5s;
 }
-/* the press keeps the hover colours and only settles a pixel — restating the
-   colours here made a click flip back to the resting state and out again */
+.btn:hover::before,
+.btn:focus-visible::before,
+.btn:hover .btn__face--on,
+.btn:focus-visible .btn__face--on { clip-path: inset(0 0 0 0); }
+.btn:hover .btn__face:not(.btn__face--on),
+.btn:focus-visible .btn__face:not(.btn__face--on) { clip-path: inset(0 0 0 100%); }
+/* the press keeps the hover state and only settles a pixel — restating the
+   resting colours here made a click flip back and out again */
 .btn:active { transform: translateY(1px); }
-.btn .arrow { transition: transform 0.5s var(--ease-out); }
-.btn:hover .arrow, .btn:focus-visible .arrow { transition-duration: 0.38s; }
+.btn .arrow { transition: transform var(--btn-wipe) var(--ease-out); }
 .btn:hover .arrow, .btn:focus-visible .arrow { transform: translateX(4px); }
 
 .btn--ghost {
-  --btn-bg: rgba(31, 58, 95, 0);
+  --btn-bg: transparent;
   --btn-fg: var(--navy);
   --btn-bd: var(--silver);
-  --btn-bg-on: var(--navy);
+  --btn-fill: var(--navy);
   --btn-fg-on: var(--luster);
   --btn-bd-on: var(--navy);
 }
+/* on the dark band: a cream plane that fills navy inside its own hairline */
 .btn--solidLight {
   --btn-bg: var(--luster);
   --btn-fg: var(--navy);
   --btn-bd: var(--luster);
-  --btn-bg-on: rgba(244, 241, 236, 0);
+  --btn-fill: var(--navy);
   --btn-fg-on: var(--luster);
   --btn-bd-on: var(--luster);
 }

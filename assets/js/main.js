@@ -136,7 +136,8 @@
   /* ---- 5. Contact form → WhatsApp or e-mail ---------------- */
   var form = document.querySelector('[data-contact]');
   if (form) {
-    var label = form.querySelector('[data-submit-label]');
+    // the label is set twice — the visible copy and the one clipped to the wipe
+    var labels = form.querySelectorAll('[data-submit-label]');
     var radios = form.querySelectorAll('input[name="channel"]');
     function channel() {
       var picked = form.querySelector('input[name="channel"]:checked');
@@ -144,7 +145,8 @@
     }
     radios.forEach(function (r) {
       r.addEventListener('change', function () {
-        if (label) label.textContent = channel() === 'email' ? 'Send Email' : 'Send Whatsapp Message';
+        var text = channel() === 'email' ? 'Send Email' : 'Send Whatsapp Message';
+        Array.prototype.forEach.call(labels, function (el) { el.textContent = text; });
       });
     });
     form.addEventListener('submit', function (e) {

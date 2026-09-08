@@ -53,10 +53,22 @@ def social(name):
     return '<svg viewBox="0 0 24 24" aria-hidden="true">%s</svg>' % SOCIAL[name]
 
 
+ARROW = '<span class="arrow" aria-hidden="true">&#8594;</span>'
+
+
+def btn_faces(label, attr=""):
+    """The label twice: once on the resting plane, once on the one that wipes
+    across. The second copy is clipped to the wipe, so the type is always the
+    right colour for what is under it. Only the first is read aloud."""
+    face = '<span class="btn__face">%s%s</span>'
+    return (face % ('<span%s>%s</span>' % (attr, label), ARROW)
+            + '<span class="btn__face btn__face--on" aria-hidden="true">'
+              '<span%s>%s</span>%s</span>' % (attr, label, ARROW))
+
+
 def btn(href, label, cls=""):
-    return ('<a class="btn%s" href="%s"><span>%s</span>'
-            '<span class="arrow" aria-hidden="true">&#8594;</span></a>'
-            % ((" " + cls) if cls else "", href, label))
+    return ('<a class="btn%s" href="%s">%s</a>'
+            % ((" " + cls) if cls else "", href, btn_faces(label)))
 
 
 # ---------------------------------------------------------------- copy
@@ -604,7 +616,7 @@ def page_contact():
           </div>
           <div class="field"><label for="ms">Message</label><textarea id="ms" name="message" rows="5" required></textarea></div>
           <div class="btn-row mt-0">
-            <button class="btn" type="submit"><span data-submit-label>Send Whatsapp Message</span><span class="arrow" aria-hidden="true">&#8594;</span></button>
+            <button class="btn" type="submit">%s</button>
           </div>
         </form>
       </div>
@@ -618,7 +630,8 @@ def page_contact():
     <div class="offices">%s</div>
   </div>
 </section>
-""" % (WA, sec_head("Our Offices"), offices)
+""" % (WA, btn_faces("Send Whatsapp Message", " data-submit-label"),
+       sec_head("Our Offices"), offices)
         + "</main>" + footer())
 
 
