@@ -260,12 +260,21 @@ ul {
   line-height: 1;
   cursor: pointer;
   box-shadow: 0 0 0 rgba(31, 58, 95, 0);
+  /* The lift and the press are two different gestures on what used to be one
+     property: `transform` carried both, so the press's 0.16s also governed
+     the lift and the button popped up in a sixth of the time the colour took.
+     Split across the independent `translate` and `scale` properties, each one
+     keeps its own clock — the lift travels with the colour, the press stays
+     quick. */
+  translate: 0 0;
+  scale: 1;
   transition:
     background-color var(--btn-swap) var(--ease-btn),
     color var(--btn-swap) var(--ease-btn),
     border-color var(--btn-swap) var(--ease-btn),
     box-shadow var(--btn-swap) var(--ease-btn),
-    transform var(--btn-press) var(--ease-press);
+    translate var(--btn-swap) var(--ease-btn),
+    scale var(--btn-press) var(--ease-press);
 }
 
 .btn:hover,
@@ -273,16 +282,16 @@ ul {
   background-color: var(--btn-bg-on);
   color: var(--btn-fg-on);
   border-color: var(--btn-bd-on);
-  transform: translateY(-1.5px);
+  translate: 0 -1.5px;
   box-shadow: 0 6px 16px -3px rgba(31, 58, 95, 0.18);
 }
 
 /* The press: the whole button compresses, the way a key gives under a finger.
-   Down is quicker than up — a real key resists, then springs. Only the
-   transform speeds up; the colours keep the swap they were given. */
+   Down is quicker than up — a real key resists, then springs. Only the scale
+   speeds up; the colour and the lift keep the swap they were given. */
 .btn:active {
   --btn-press: 0.09s;
-  transform: translateY(0) scale(0.97);
+  scale: 0.97;
   box-shadow: 0 2px 4px -1px rgba(31, 58, 95, 0.12);
 }
 
@@ -820,9 +829,10 @@ ul {
   content: "";
   position: absolute;
   background: var(--navy);
+  /* the turn and the colour are one gesture, so they share one duration */
   transition:
     transform 0.45s var(--ease-spring),
-    background 0.3s var(--ease-spring);
+    background 0.45s var(--ease-spring);
 }
 
 .acc__sign::before {
@@ -1559,7 +1569,7 @@ a.company__url:hover {
     background 0.4s var(--ease-out),
     border-color 0.4s var(--ease-out),
     color 0.4s var(--ease-out),
-    transform 0.3s var(--ease-out);
+    transform 0.4s var(--ease-out);
 }
 
 .social a:hover {
