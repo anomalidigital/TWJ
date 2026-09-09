@@ -21,7 +21,7 @@
     navRaf = 0;
     if (!header) return;
     var y = window.scrollY;
-    var next = solid ? y > 20 : y > 45;
+    var next = solid ? y > 30 : y > 65;
     if (next === solid) return;
     solid = next;
     header.classList.toggle('is-solid', solid);
@@ -42,8 +42,12 @@
       burger.setAttribute('aria-expanded', String(!open));
       drawer.classList.toggle('is-open', !open);
       document.body.style.overflow = !open ? 'hidden' : '';
+      var count = links.length;
       links.forEach(function (a, i) {
-        a.style.transitionDelay = !open ? 120 + i * 55 + 'ms' : '0ms';
+        // opening: cascade top-to-bottom; closing: reverse bottom-to-top
+        a.style.transitionDelay = !open
+          ? 100 + i * 40 + 'ms'
+          : (count - 1 - i) * 25 + 'ms';
       });
     });
     links.forEach(function (a) {
@@ -63,6 +67,8 @@
   if (reduce || !('IntersectionObserver' in window)) {
     revealables.forEach(function (el) { el.classList.add('is-in'); });
   } else {
+    var winH = window.innerHeight || document.documentElement.clientHeight;
+
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
@@ -70,16 +76,27 @@
           io.unobserve(entry.target);
         }
       });
-    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.08 });
-    revealables.forEach(function (el, i) {
+    }, { rootMargin: '0px 0px 80px 0px', threshold: 0 });
+
+    revealables.forEach(function (el) {
+      var rect = el.getBoundingClientRect();
+      var inView = rect.top < winH && rect.bottom > 0;
       var parent = el.parentElement;
-      if (parent && !el.style.getPropertyValue('--d')) {
+
+      if (!inView && parent && !el.style.getPropertyValue('--d')) {
         var sibs = Array.prototype.slice.call(parent.children).filter(function (c) {
           return c.hasAttribute && c.hasAttribute('data-reveal');
         });
-        if (sibs.length > 1) el.style.setProperty('--d', Math.min(sibs.indexOf(el), 6) * 90 + 'ms');
+        if (sibs.length > 1) el.style.setProperty('--d', Math.min(sibs.indexOf(el), 6) * 45 + 'ms');
       }
-      io.observe(el);
+
+      if (inView) {
+        requestAnimationFrame(function () {
+          el.classList.add('is-in');
+        });
+      } else {
+        io.observe(el);
+      }
     });
   }
 

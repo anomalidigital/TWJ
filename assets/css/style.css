@@ -29,19 +29,22 @@
   --shell: 1320px;
   --gutter: clamp(1.25rem, 5vw, 4.5rem);
   --section: clamp(2.6rem, 4.6vw, 4.5rem);
-  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease: cubic-bezier(0.25, 1, 0.5, 1);
   /* movement */
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  /* colour */
-  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
-  /* the press: fastest at the start */
+  --ease-out: cubic-bezier(0.25, 1, 0.5, 1);
+  /* colour / fade */
+  --ease-soft: cubic-bezier(0.25, 1, 0.5, 1);
+  /* smooth ease */
+  --ease-spring: cubic-bezier(0.25, 1, 0.5, 1);
+  /* tactile press */
+  /* picked in the button lab: the colour swap runs on this, over 670ms */
+  --ease-btn: cubic-bezier(0.22, 1, 0.36, 1);
+  /* the press answers the finger, so it is fastest at the start */
   --ease-press: cubic-bezier(0, 0, 0.2, 1);
 
   /* The header changes state the way twj.co.id does: crossing a line just off
-     the top, not a value read off the scroll position. Everything in the bar
-     moves on this one duration, so nothing leads or lags. */
-  --nav-fade: 0.45s;
-  --ease-nav: cubic-bezier(0.16, 1, 0.3, 1);
+     the top, not a value read off the scroll position. */
+  --nav-fade: 0.4s;
   --header-h: 88px;
 }
 
@@ -228,8 +231,9 @@ ul {
    hairline it rests on, and the same three again for where it lands; nothing
    below this restates a colour, so a variant is six lines and no new rules.
    Corners stay square — the hairline is the page's own language.
-   --btn-swap carries the timing so the resting rule, the hover and the press
-   can share one list and differ only where they mean to. */
+   --btn-swap and --btn-press carry the timing, so the resting rule, the hover
+   and the press share one list and differ only where they mean to. Both the
+   duration and the curve were chosen from the button lab, not guessed. */
 .btn {
   --btn-bg: var(--navy);
   --btn-fg: var(--luster);
@@ -237,7 +241,7 @@ ul {
   --btn-bg-on: var(--luster);
   --btn-fg-on: var(--navy);
   --btn-bd-on: var(--navy);
-  --btn-swap: 0.35s;
+  --btn-swap: 0.67s;
   --btn-press: 0.16s;
 
   display: inline-flex;
@@ -255,10 +259,12 @@ ul {
   text-transform: uppercase;
   line-height: 1;
   cursor: pointer;
+  box-shadow: 0 0 0 rgba(31, 58, 95, 0);
   transition:
-    background-color var(--btn-swap) var(--ease-out),
-    color var(--btn-swap) var(--ease-out),
-    border-color var(--btn-swap) var(--ease-out),
+    background-color var(--btn-swap) var(--ease-btn),
+    color var(--btn-swap) var(--ease-btn),
+    border-color var(--btn-swap) var(--ease-btn),
+    box-shadow var(--btn-swap) var(--ease-btn),
     transform var(--btn-press) var(--ease-press);
 }
 
@@ -267,23 +273,27 @@ ul {
   background-color: var(--btn-bg-on);
   color: var(--btn-fg-on);
   border-color: var(--btn-bd-on);
+  transform: translateY(-1.5px);
+  box-shadow: 0 6px 16px -3px rgba(31, 58, 95, 0.18);
 }
 
-/* The press: the whole button compresses slightly, the way a key gives under
-   a finger. Down is quicker than up — a real key resists, then springs. */
+/* The press: the whole button compresses, the way a key gives under a finger.
+   Down is quicker than up — a real key resists, then springs. Only the
+   transform speeds up; the colours keep the swap they were given. */
 .btn:active {
   --btn-press: 0.09s;
-  transform: scale(0.97);
+  transform: translateY(0) scale(0.97);
+  box-shadow: 0 2px 4px -1px rgba(31, 58, 95, 0.12);
 }
 
 .btn .arrow {
   display: inline-block;
-  transition: transform var(--btn-swap) var(--ease-out);
+  transition: transform var(--btn-swap) var(--ease-btn);
 }
 
 .btn:hover .arrow,
 .btn:focus-visible .arrow {
-  transform: translateX(5px);
+  transform: translateX(4px);
 }
 
 .btn--ghost {
@@ -293,6 +303,11 @@ ul {
   --btn-bg-on: var(--navy);
   --btn-fg-on: var(--luster);
   --btn-bd-on: var(--navy);
+}
+
+.btn--ghost:hover,
+.btn--ghost:focus-visible {
+  box-shadow: 0 6px 16px -3px rgba(31, 58, 95, 0.12);
 }
 
 /* On the dark band the button gives its plane up rather than changing it: the
@@ -307,6 +322,11 @@ ul {
   --btn-bg-on: rgba(244, 241, 236, 0);
   --btn-fg-on: var(--luster);
   --btn-bd-on: var(--luster);
+}
+
+.btn--solidLight:hover,
+.btn--solidLight:focus-visible {
+  box-shadow: 0 6px 18px -3px rgba(244, 241, 236, 0.22);
 }
 
 .btn-row {
@@ -336,14 +356,16 @@ ul {
   content: "";
   position: absolute;
   opacity: 0;
-  transition: opacity var(--nav-fade) var(--ease-nav);
+  transition: opacity var(--nav-fade) var(--ease-spring);
   pointer-events: none;
 }
 
 .header::before {
   inset: 0;
-  background: var(--luster);
-  box-shadow: 0 6px 18px rgba(31, 58, 95, 0.07);
+  background: rgba(244, 241, 236, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 8px 24px rgba(31, 58, 95, 0.06);
 }
 
 .header::after {
@@ -389,7 +411,7 @@ ul {
 
 .brand__mark .mark-light,
 .brand__mark .mark-dark {
-  transition: opacity var(--nav-fade) var(--ease-nav);
+  transition: opacity var(--nav-fade) var(--ease-spring);
 }
 
 .brand__mark .mark-dark {
@@ -428,7 +450,7 @@ ul {
   text-transform: uppercase;
   color: var(--luster);
   padding-block: 0.4rem;
-  transition: color var(--nav-fade) var(--ease-nav);
+  transition: color var(--nav-fade) var(--ease-spring);
 }
 
 .header.is-solid .nav a {
@@ -447,12 +469,12 @@ ul {
    is quicker — listed last so it wins on the current page's own link */
 .nav a:hover {
   color: #ffffff;
-  transition: color 0.28s var(--ease-nav);
+  transition: color 0.25s var(--ease-spring);
 }
 
 .header.is-solid .nav a:hover {
   color: var(--navy);
-  transition: color 0.28s var(--ease-nav);
+  transition: color 0.25s var(--ease-spring);
 }
 
 .nav a::after {
@@ -461,11 +483,11 @@ ul {
   left: 0;
   bottom: 0;
   width: 100%;
-  height: 1px;
+  height: 1.5px;
   background: var(--gold);
   transform: scaleX(0);
   transform-origin: right;
-  transition: transform 0.4s var(--ease-out);
+  transition: transform 0.35s var(--ease-spring);
 }
 
 .nav a:hover::after,
@@ -485,6 +507,7 @@ ul {
   background: none;
   border: 0;
   cursor: pointer;
+  transition: transform 0.25s var(--ease-spring);
 }
 
 @media (min-width: 940px) {
@@ -493,13 +516,24 @@ ul {
   }
 }
 
+.burger:hover {
+  transform: scale(1.06);
+}
+
+.burger:active {
+  transform: scale(0.94);
+}
+
 .burger span {
   display: block;
   height: 1.5px;
   width: 26px;
   background: var(--luster);
-  transition: transform 0.4s var(--ease-out), opacity 0.3s var(--ease-out),
-    background var(--nav-fade) var(--ease-nav);
+  transform-origin: center;
+  transition:
+    transform 0.42s var(--ease-spring),
+    opacity 0.3s var(--ease-spring),
+    background var(--nav-fade) var(--ease-spring);
 }
 
 .header.is-solid .burger span {
@@ -512,6 +546,7 @@ ul {
 
 .burger[aria-expanded="true"] span:nth-child(2) {
   opacity: 0;
+  transform: scaleX(0);
 }
 
 .burger[aria-expanded="true"] span:nth-child(3) {
@@ -522,13 +557,15 @@ ul {
   position: fixed;
   inset: 0;
   z-index: 80;
-  background: var(--navy);
+  background: rgba(22, 41, 63, 0.98);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   padding: calc(var(--header-h) + 3rem) var(--gutter) 3rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   clip-path: inset(0 0 100% 0);
-  transition: clip-path 0.6s var(--ease);
+  transition: clip-path 0.55s cubic-bezier(0.22, 1, 0.36, 1);
   overflow-y: auto;
 }
 
@@ -549,13 +586,21 @@ ul {
   padding: 0.7rem 0;
   border-bottom: 1px solid var(--line-invert);
   opacity: 0;
-  transform: translateY(14px);
-  transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
+  transform: translateY(20px);
+  transition:
+    opacity 0.55s var(--ease-spring),
+    transform 0.55s var(--ease-spring),
+    color 0.25s var(--ease-spring);
 }
 
 .drawer.is-open nav a {
   opacity: 1;
-  transform: none;
+  transform: translateY(0);
+}
+
+.drawer nav a:hover {
+  color: var(--gold);
+  transform: translateX(8px);
 }
 
 .drawer__foot {
@@ -751,8 +796,8 @@ ul {
   font-weight: 700;
   color: var(--navy);
   transition:
-    color 0.45s var(--ease-soft),
-    opacity 0.2s var(--ease-soft);
+    color 0.35s var(--ease-spring),
+    opacity 0.2s var(--ease-spring);
 }
 
 .acc__btn:hover {
@@ -760,7 +805,7 @@ ul {
 }
 
 .acc__btn:active {
-  opacity: 0.72;
+  opacity: 0.76;
 }
 
 .acc__sign {
@@ -775,7 +820,9 @@ ul {
   content: "";
   position: absolute;
   background: var(--navy);
-  transition: transform 0.5s var(--ease-out), background 0.35s var(--ease-out);
+  transition:
+    transform 0.45s var(--ease-spring),
+    background 0.3s var(--ease-spring);
 }
 
 .acc__sign::before {
@@ -803,7 +850,7 @@ ul {
 .acc__panel {
   overflow: hidden;
   height: 0;
-  transition: height 0.55s var(--ease-out);
+  transition: height 0.48s var(--ease-spring);
 }
 
 .acc__panel>div {
@@ -942,7 +989,7 @@ ul {
   width: auto;
   height: auto;
   object-fit: contain;
-  transition: transform 0.35s var(--ease-out);
+  transition: transform 0.35s var(--ease-spring);
 }
 
 .svc:hover .svc__icon img {
@@ -974,7 +1021,7 @@ ul {
   width: 7px;
   height: 1px;
   background: var(--silver);
-  transition: background 0.35s var(--ease), width 0.35s var(--ease);
+  transition: background 0.35s var(--ease-spring), width 0.35s var(--ease-spring);
 }
 
 .svc li:hover::before {
@@ -1022,7 +1069,7 @@ ul {
   height: 100%;
   object-fit: cover;
   transform: scale(1.02);
-  transition: transform 0.8s var(--ease);
+  transition: transform 0.7s var(--ease-spring);
 }
 
 .person:hover .person__media img {
@@ -1142,6 +1189,7 @@ ul {
   font-size: 0.8rem;
   color: var(--slate);
   overflow-wrap: break-word;
+  transition: color 0.4s var(--ease-soft);
 }
 
 a.company__url:hover {
@@ -1180,11 +1228,11 @@ a.company__url:hover {
   max-width: 100%;
   width: auto;
   object-fit: contain;
-  transition: transform 0.5s var(--ease);
+  transition: transform 0.4s var(--ease-spring);
 }
 
 .clients__cell:hover img {
-  transform: scale(1.04);
+  transform: scale(1.05);
 }
 
 /* ---------- 13. CTA band ----------------------------------- */
@@ -1277,7 +1325,7 @@ a.company__url:hover {
   border: 1px solid var(--silver);
   border-radius: 50%;
   position: relative;
-  transition: border-color 0.3s var(--ease);
+  transition: border-color 0.3s var(--ease-out);
 }
 
 .channel .dot::after {
@@ -1287,7 +1335,7 @@ a.company__url:hover {
   border-radius: 50%;
   background: var(--gold);
   transform: scale(0);
-  transition: transform 0.3s var(--ease);
+  transition: transform 0.3s var(--ease-out);
 }
 
 .channel input:checked+.dot {
@@ -1330,7 +1378,7 @@ a.company__url:hover {
   padding: 0.5rem 0 0.8rem;
   font-size: 1rem;
   color: var(--navy);
-  transition: border-color 0.4s var(--ease);
+  transition: border-color 0.4s var(--ease-soft);
 }
 
 .field textarea {
@@ -1543,12 +1591,22 @@ a.company__url:hover {
   justify-content: center;
   border: 0;
   box-shadow: 0 10px 26px rgba(0, 0, 0, 0.2);
-  transition: transform 0.4s var(--ease-out), background 0.4s var(--ease-out);
+  will-change: transform, box-shadow;
+  transition:
+    transform 0.35s var(--ease-spring),
+    background 0.35s var(--ease-spring),
+    box-shadow 0.35s var(--ease-spring);
 }
 
 .wa:hover {
   background: #1da851;
-  transform: scale(1.06);
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 10px 24px rgba(37, 211, 102, 0.32);
+}
+
+.wa:active {
+  transform: translateY(0) scale(0.97);
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2);
 }
 
 .wa svg {
@@ -1560,14 +1618,16 @@ a.company__url:hover {
 /* ---------- 17. Reveal ------------------------------------- */
 [data-reveal] {
   opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
+  transform: translateY(16px);
+  transition:
+    opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1),
+    transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
   transition-delay: var(--d, 0ms);
 }
 
 [data-reveal].is-in {
   opacity: 1;
-  transform: none;
+  transform: translateY(0);
 }
 
 @media (prefers-reduced-motion: reduce) {
