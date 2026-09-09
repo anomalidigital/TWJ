@@ -12,16 +12,16 @@
   var solid = false;
 
   // Scroll says when the header changes, not how fast — the same way the
-  // current twj.co.id does it: the bar is transparent only while the page is
-  // at rest at the very top, and the fade itself lives in CSS. Reading the
-  // fade off the scroll position instead handed its timing to the wheel.
-  // The line sits lower on the way back up so a scroll resting on it cannot
-  // flutter between the two states.
+  // current twj.co.id does it. The bar stays transparent over the top of the
+  // banner and turns solid past the line; the fade itself lives in CSS.
+  // Reading the fade off the scroll position instead handed its timing to the
+  // wheel. The line sits lower on the way back up (20 against 45) so a scroll
+  // that rests on it cannot flutter between the two states.
   function paintHeader() {
     navRaf = 0;
     if (!header) return;
     var y = window.scrollY;
-    var next = solid ? y > 2 : y > 6;
+    var next = solid ? y > 20 : y > 45;
     if (next === solid) return;
     solid = next;
     header.classList.toggle('is-solid', solid);
