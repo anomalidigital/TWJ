@@ -32,20 +32,13 @@
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);   /* movement */
   --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);   /* colour */
-  --ease-swap: linear; /* colour blends evenly — easing makes them read as snaps */
-  --nav-fade: 0.55s;   /* how long the header takes to change, at any scroll speed */
-  /* The type waits for the ground. Light type is the legible one while the
-     ground is dark and dark type once it is bright; they are equally legible
-     at about 62% through the fade, so that is where the label, the mark and
-     the burger swap, quickly. Swapping them along with the ground instead
-     left the labels at 1.3:1 against it — near invisible for a third of a
-     second. The wait is shorter on the way back because the ground is falling
-     from luster, so it passes the same point sooner. */
-  --nav-swap: 0.06s;
-  --nav-wait-in: 0.35s;
-  --nav-wait-out: 0.2s;
-  --nav-wait-in-strong: 0.26s;   /* the current page is white, not luster */
-  --nav-wait-out-strong: 0.29s;
+  --ease-sweep: cubic-bezier(0.22, 1, 0.36, 1); /* the sweep, from the client's reference */
+  /* Everything in the header changes together, on one duration and one gentle
+     curve. An earlier version made the ground fade slowly while the type
+     swapped in 51ms to protect its contrast — that snap in the middle of a
+     slow fade is exactly what read as stiff. */
+  --nav-fade: 0.55s;
+  --ease-nav: cubic-bezier(0.4, 0, 0.2, 1);
   --header-h: 88px;
 }
 
@@ -142,32 +135,26 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 
 /* ---------- 4. Buttons ------------------------------------- */
-/* The answer to a hover is a plane that wipes across, not a colour that
-   dissolves. Movement is what easing was made for — it has inertia, so a curve
-   reads as weight rather than as a snap.
-   The label is set twice, once in each colour, and the second copy is clipped
-   to exactly the same edge as the plane. So every letter is always the right
-   colour for whatever is under it, and the wipe cuts through the type as it
-   passes. Changing one label's colour instead — however it was timed — left
-   part of it sitting on the wrong plane and reading as a flash.
-   Both layers animate the same property, on the same curve, so the edge of the
-   plane and the edge of the type can never drift apart.
-   Corners stay square: this is a plane sliding under a hairline, and a radius
-   would soften the edge the whole page is built on. */
+/* The reference the client sent, kept as it was written: a plane behind the
+   label that scales out from the left on the way in and carries on out to the
+   right on the way out, so the sweep always travels the same direction. Its
+   curve is the reference's own. Only the palette, the square corners and the
+   page's uppercase label are ours.
+   Earlier versions of this rebuilt the sweep with clip-path, which reverses on
+   the way out — that is why it never matched. */
 .btn {
   --btn-bg: var(--navy);       /* the plane it rests on */
   --btn-fg: var(--luster);     /* the label at rest */
   --btn-bd: var(--navy);
-  --btn-fill: var(--luster);   /* the plane that wipes across */
+  --btn-fill: var(--luster);   /* the plane that sweeps across */
   --btn-fg-on: var(--navy);    /* the label once it has */
   --btn-bd-on: var(--navy);
-  --btn-wipe: 0.55s;
 
   position: relative;
-  isolation: isolate;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  gap: 0.75rem;
   padding: 0.95rem 1.9rem;
   background: var(--btn-bg);
   color: var(--btn-fg);
@@ -180,56 +167,36 @@ ul { margin: 0; padding: 0; list-style: none; }
   text-transform: uppercase;
   line-height: 1;
   cursor: pointer;
-  transition: border-color var(--btn-wipe) var(--ease-out), transform 0.12s var(--ease-soft);
+  transition:
+    color 0.4s var(--ease-sweep),
+    border-color 0.45s var(--ease-sweep),
+    transform 0.12s var(--ease-soft);
 }
 .btn::before {
   content: "";
   position: absolute;
   inset: 0;
-  z-index: -1;
   background: var(--btn-fill);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.45s var(--ease-sweep);
 }
-/* The two faces are exact complements: the resting one gives up the width the
-   arriving one takes, so their glyphs never overlap and no edge is drawn
-   twice. Same property, same curve, same duration as the plane, so the type
-   is cut at exactly the plane's edge. */
-.btn__face {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
+.btn span { position: relative; z-index: 1; }
+.btn:hover::before,
+.btn:focus-visible::before {
+  transform: scaleX(1);
+  transform-origin: left;
 }
-.btn__face--on {
-  position: absolute;
-  inset: 0;
-  justify-content: center;
-  color: var(--btn-fg-on);
-}
-.btn::before,
-.btn__face,
-.btn__face--on { transition: clip-path var(--btn-wipe) var(--ease-out); }
-.btn::before,
-.btn__face--on { clip-path: inset(0 100% 0 0); }
-/* :not() matters — the arriving face carries both classes, so a bare
-   .btn__face rule placed after it would un-clip it and show both labels */
-.btn__face:not(.btn__face--on) { clip-path: inset(0 0 0 0); }
-
 .btn:hover,
 .btn:focus-visible {
+  color: var(--btn-fg-on);
   border-color: var(--btn-bd-on);
-  /* entering is quicker, so the button answers the cursor */
-  --btn-wipe: 0.5s;
 }
-.btn:hover::before,
-.btn:focus-visible::before,
-.btn:hover .btn__face--on,
-.btn:focus-visible .btn__face--on { clip-path: inset(0 0 0 0); }
-.btn:hover .btn__face:not(.btn__face--on),
-.btn:focus-visible .btn__face:not(.btn__face--on) { clip-path: inset(0 0 0 100%); }
 /* the press keeps the hover state and only settles a pixel — restating the
    resting colours here made a click flip back and out again */
 .btn:active { transform: translateY(1px); }
-.btn .arrow { transition: transform var(--btn-wipe) var(--ease-out); }
-.btn:hover .arrow, .btn:focus-visible .arrow { transform: translateX(4px); }
+.btn .arrow { transition: transform 0.4s var(--ease-sweep); }
+.btn:hover .arrow, .btn:focus-visible .arrow { transform: translateX(5px); }
 
 .btn--ghost {
   --btn-bg: transparent;
@@ -275,7 +242,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   content: "";
   position: absolute;
   opacity: 0;
-  transition: opacity var(--nav-fade) var(--ease-swap);
+  transition: opacity var(--nav-fade) var(--ease-nav);
   pointer-events: none;
 }
 .header::before {
@@ -299,9 +266,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .brand__mark { position: relative; display: block; height: 46px; }
 .brand__mark img { display: block; height: 100%; width: auto; }
 .brand__mark .mark-light,
-.brand__mark .mark-dark { transition: opacity var(--nav-swap) var(--ease-swap) var(--nav-wait-out); }
-.header.is-solid .brand__mark .mark-light,
-.header.is-solid .brand__mark .mark-dark { transition-delay: var(--nav-wait-in); }
+.brand__mark .mark-dark { transition: opacity var(--nav-fade) var(--ease-nav); }
 .brand__mark .mark-dark { position: absolute; inset: 0; opacity: 0; }
 .header.is-solid .brand__mark .mark-dark { opacity: 1; }
 /* the outgoing mark has to leave as the incoming one arrives, or both sit on
@@ -318,24 +283,15 @@ ul { margin: 0; padding: 0; list-style: none; }
   text-transform: uppercase;
   color: var(--luster);
   padding-block: 0.4rem;
-  transition: color var(--nav-swap) var(--ease-swap) var(--nav-wait-out);
+  transition: color var(--nav-fade) var(--ease-nav);
 }
-.header.is-solid .nav a { color: var(--slate); transition-delay: var(--nav-wait-in); }
-/* the current page sits at the far ends of the scale, white and navy, so it
-   stays legible longer and can hand over nearer the middle of the fade */
-.nav a[aria-current="page"] {
-  color: #ffffff;
-  transition: color var(--nav-swap) var(--ease-swap) var(--nav-wait-out-strong);
-}
-.header.is-solid .nav a[aria-current="page"] {
-  color: var(--navy);
-  transition-delay: var(--nav-wait-in-strong);
-}
+.header.is-solid .nav a { color: var(--slate); }
+.nav a[aria-current="page"] { color: #ffffff; }
+.header.is-solid .nav a[aria-current="page"] { color: var(--navy); }
 /* answering the cursor is a different job from following the scroll, so hover
-   keeps its own timing and never inherits the wait — listed last so it wins
-   on the current page's own link */
-.nav a:hover { color: #ffffff; transition: color 0.28s var(--ease-swap); }
-.header.is-solid .nav a:hover { color: var(--navy); transition: color 0.28s var(--ease-swap); }
+   is quicker — listed last so it wins on the current page's own link */
+.nav a:hover { color: #ffffff; transition: color 0.28s var(--ease-nav); }
+.header.is-solid .nav a:hover { color: var(--navy); transition: color 0.28s var(--ease-nav); }
 .nav a::after {
   content: "";
   position: absolute;
@@ -366,13 +322,9 @@ ul { margin: 0; padding: 0; list-style: none; }
   width: 26px;
   background: var(--luster);
   transition: transform 0.4s var(--ease-out), opacity 0.3s var(--ease-out),
-    background var(--nav-swap) var(--ease-swap) var(--nav-wait-out);
+    background var(--nav-fade) var(--ease-nav);
 }
-.header.is-solid .burger span {
-  background: var(--navy);
-  transition: transform 0.4s var(--ease-out), opacity 0.3s var(--ease-out),
-    background var(--nav-swap) var(--ease-swap) var(--nav-wait-in);
-}
+.header.is-solid .burger span { background: var(--navy); }
 .burger[aria-expanded="true"] span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
 .burger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
 .burger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }

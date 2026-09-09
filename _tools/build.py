@@ -56,19 +56,13 @@ def social(name):
 ARROW = '<span class="arrow" aria-hidden="true">&#8594;</span>'
 
 
-def btn_faces(label, attr=""):
-    """The label twice: once on the resting plane, once on the one that wipes
-    across. The second copy is clipped to the wipe, so the type is always the
-    right colour for what is under it. Only the first is read aloud."""
-    face = '<span class="btn__face">%s%s</span>'
-    return (face % ('<span%s>%s</span>' % (attr, label), ARROW)
-            + '<span class="btn__face btn__face--on" aria-hidden="true">'
-              '<span%s>%s</span>%s</span>' % (attr, label, ARROW))
+def btn_label(label, attr=""):
+    return '<span%s>%s</span>%s' % (attr, label, ARROW)
 
 
 def btn(href, label, cls=""):
     return ('<a class="btn%s" href="%s">%s</a>'
-            % ((" " + cls) if cls else "", href, btn_faces(label)))
+            % ((" " + cls) if cls else "", href, btn_label(label)))
 
 
 # ---------------------------------------------------------------- copy
@@ -630,7 +624,7 @@ def page_contact():
     <div class="offices">%s</div>
   </div>
 </section>
-""" % (WA, btn_faces("Send Whatsapp Message", " data-submit-label"),
+""" % (WA, btn_label("Send Whatsapp Message", " data-submit-label"),
        sec_head("Our Offices"), offices)
         + "</main>" + footer())
 
