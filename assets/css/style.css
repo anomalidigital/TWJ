@@ -735,6 +735,16 @@ ul {
   align-items: start;
 }
 
+/* Stacked, the portrait belongs at the top: below the accordion it ended up
+   after every bio and a button, far from the names that select it. The
+   markup keeps the text first so the section still reads heading-then-people
+   when the two sit side by side. */
+@media (max-width: 899px) {
+  .duo--top .partner-figure {
+    order: -1;
+  }
+}
+
 .duo--center .duo__text {
   text-align: center;
 }
