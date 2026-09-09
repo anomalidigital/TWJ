@@ -11,17 +11,17 @@
 
   var solid = false;
 
-  // Scroll says when the header changes, not how fast. Reading the fade
-  // straight off the scroll position handed its timing to the wheel: a flick
-  // covers the ramp in a fifth of a second, and stopping part way left the bar
-  // parked half white. Crossing the line now starts the fixed fade in CSS. The
-  // line sits lower on the way back up so a scroll that rests near it cannot
+  // Scroll says when the header changes, not how fast — the same way the
+  // current twj.co.id does it: the bar is transparent only while the page is
+  // at rest at the very top, and the fade itself lives in CSS. Reading the
+  // fade off the scroll position instead handed its timing to the wheel.
+  // The line sits lower on the way back up so a scroll resting on it cannot
   // flutter between the two states.
   function paintHeader() {
     navRaf = 0;
     if (!header) return;
     var y = window.scrollY;
-    var next = solid ? y > 18 : y > 46;
+    var next = solid ? y > 2 : y > 6;
     if (next === solid) return;
     solid = next;
     header.classList.toggle('is-solid', solid);

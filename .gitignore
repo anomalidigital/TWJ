@@ -10,5 +10,5 @@ _tools/twj-preview.html
 __pycache__/
 *.pyc
 
-# reference snippet dropped in for the button brief, not part of the site
-Button.html
+# the client's reference snippets, kept for comparison but not part of the site
+_tools/reference/

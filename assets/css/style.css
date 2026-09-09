@@ -33,12 +33,14 @@
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);   /* movement */
   --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);   /* colour */
   --ease-sweep: cubic-bezier(0.22, 1, 0.36, 1); /* the sweep, from the client's reference */
-  /* Everything in the header changes together, on one duration and one gentle
-     curve. An earlier version made the ground fade slowly while the type
-     swapped in 51ms to protect its contrast — that snap in the middle of a
-     slow fade is exactly what read as stiff. */
-  --nav-fade: 0.55s;
-  --ease-nav: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-press: cubic-bezier(0, 0, 0.2, 1);     /* the press: fastest at the start */
+  /* The header changes the way the current twj.co.id does: crossing the line
+     just off the top starts a 0.3s fade on the browser's default curve. That
+     site was measured for this — a threshold, not a value read off the scroll
+     position — and everything here moves on the one duration, so nothing in
+     the bar leads or lags. */
+  --nav-fade: 0.3s;
+  --ease-nav: ease;
   --header-h: 88px;
 }
 
@@ -170,7 +172,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   transition:
     color 0.4s var(--ease-sweep),
     border-color 0.45s var(--ease-sweep),
-    transform 0.12s var(--ease-soft);
+    transform 0.16s var(--ease-press);
 }
 .btn::before {
   content: "";
@@ -192,9 +194,19 @@ ul { margin: 0; padding: 0; list-style: none; }
   color: var(--btn-fg-on);
   border-color: var(--btn-bd-on);
 }
-/* the press keeps the hover state and only settles a pixel — restating the
-   resting colours here made a click flip back and out again */
-.btn:active { transform: translateY(1px); }
+/* The press: the whole button compresses very slightly, the way a physical
+   key gives under a finger. 0.97 and the sub-300ms, ease-out shape are from
+   Emil Kowalski's animation notes. Going down is quicker than coming back up
+   (90ms against 160ms) — a real key resists the finger and then springs.
+   The colours are deliberately not restated here: an earlier version did, and
+   a click flipped the button back to its resting state and out again. */
+.btn:active {
+  transform: scale(0.97);
+  transition:
+    color 0.4s var(--ease-sweep),
+    border-color 0.45s var(--ease-sweep),
+    transform 0.09s var(--ease-press);
+}
 .btn .arrow { transition: transform 0.4s var(--ease-sweep); }
 .btn:hover .arrow, .btn:focus-visible .arrow { transform: translateX(5px); }
 

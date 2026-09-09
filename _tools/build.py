@@ -177,7 +177,7 @@ def head(title, desc):
 <meta property="og:type" content="website">
 <meta property="og:title" content="%s - Tanuwijaya &amp; Partners">
 <meta property="og:description" content="%s">
-<meta property="og:image" content="assets/img/hero-home.webp">
+<meta property="og:image" content="assets/img/hero/home.webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
@@ -227,7 +227,7 @@ def header(page):
 def hero(title_top, title_thin, lead, button, img, alt):
     return """
 <section class="hero">
-  <div class="hero__media"><img src="assets/img/%s" alt="%s" fetchpriority="high" width="2000" height="1180"></div>
+  <div class="hero__media"><img src="assets/img/hero/%s" alt="%s" fetchpriority="high" width="2000" height="1180"></div>
   <div class="hero__scrim"></div>
   <div class="shell hero__inner">
     <h1 data-reveal>%s<span class="thin">%s</span></h1>
@@ -300,7 +300,7 @@ def person_card(slug, name, role, mail):
 def cta(title, text):
     return """
 <section class="cta">
-  <div class="cta__bg"><img src="assets/img/cta-band.webp" alt="" aria-hidden="true" loading="lazy" width="1840" height="520"></div>
+  <div class="cta__bg"><img src="assets/img/section/cta-band.webp" alt="" aria-hidden="true" loading="lazy" width="1840" height="520"></div>
   <div class="shell">
     <h2 class="h2" data-reveal>%s</h2>
     <p data-reveal style="--d:80ms">%s</p>
@@ -381,13 +381,13 @@ def page_home():
         + hero("Corporate Services", "Redefined",
                "Tanuwijaya &amp; Partners is a boutique corporate services firm. Our team of experts delivers comprehensive corporate services, including accounting, audit, tax, and legal solutions, tailored to your unique needs. With our expertise and personalized approach, you&rsquo;ll gain clarity, efficiency, and peace of mind, allowing you to focus on driving growth and innovation.",
                btn("industries-services.html", "Explore Services"),
-               "hero-home.webp", "Advisers reviewing financial reports with a client")
+               "home.webp", "Advisers reviewing financial reports with a client")
         + """
 <section class="section section--luster" id="story">
   <div class="shell">
     <div class="duo duo--center">
       <div class="figure figure--inset" data-reveal>
-        <img class="ratio-3x4" src="assets/img/story-building.webp" alt="Office towers in the Jakarta business district" loading="lazy" width="1100" height="1467">
+        <img class="ratio-3x4" src="assets/img/section/building.webp" alt="Office towers in the Jakarta business district" loading="lazy" width="1100" height="1467">
       </div>
       <div class="duo__text">
         <h2 class="h2" data-reveal>Founding Story</h2>
@@ -436,7 +436,7 @@ def page_about():
         + hero("Our Humble", "Beginning",
                "Since 1989, Tanuwijaya &amp; Partners has built lasting relationships through expert legal care and trusted corporate services. As a family-owned firm, we are dedicated to long-term partnerships&mdash;supporting businesses and individuals from local enterprises to global organizations.",
                btn("#story", "Learn more about us"),
-               "hero-about.webp", "Office facade in the Jakarta business district")
+               "about.webp", "Office facade in the Jakarta business district")
         + """
 <section class="section section--luster" id="story">
   <div class="shell">
@@ -446,7 +446,7 @@ def page_about():
         <p class="lead mt-m" data-reveal style="--d:80ms">%s</p>
       </div>
       <div class="figure figure--layered" data-reveal style="--d:120ms">
-        <img class="ratio-3x2" src="assets/img/about-founding.webp" alt="The Tanuwijaya &amp; Partners team" loading="lazy" width="1500" height="1000">
+        <img class="ratio-3x2" src="assets/img/section/founding.webp" alt="The Tanuwijaya &amp; Partners team" loading="lazy" width="1500" height="1000">
       </div>
     </div>
     <div class="duo duo--flip mt-l" style="margin-top:clamp(3rem,6vw,5.5rem)">
@@ -454,7 +454,7 @@ def page_about():
         <p class="lead" data-reveal>%s</p>
       </div>
       <div class="figure figure--layered figure--mirror" data-reveal style="--d:120ms">
-        <img class="ratio-3x2" src="assets/img/about-office.webp" alt="The Tanuwijaya &amp; Partners office" loading="lazy" width="1500" height="1000">
+        <img class="ratio-3x2" src="assets/img/section/office.webp" alt="The Tanuwijaya &amp; Partners office" loading="lazy" width="1500" height="1000">
       </div>
     </div>
   </div>
@@ -480,7 +480,7 @@ def page_people():
         + '<main id="main">'
         + hero("Trusted by clients", "since 1999", FAMILY,
                btn("#partners", "Get to know our team"),
-               "hero-people.webp", "The Tanuwijaya &amp; Partners team in discussion")
+               "people.webp", "The Tanuwijaya &amp; Partners team in discussion")
         + """
 <section class="section section--luster" id="partners">
   <div class="shell">
@@ -526,7 +526,7 @@ def page_industries():
         + hero("Top-notch", "Corporate Services",
                "Trusted by generations, we deliver professional corporate solutions with personalized care, confidentiality, and unwavering integrity",
                btn("#industries", "Learn more"),
-               "hero-industries.webp", "Jakarta business district")
+               "industries.webp", "Jakarta business district")
         + """
 <section class="section section--white" id="industries">
   <div class="shell">
@@ -585,7 +585,7 @@ def page_contact():
         + hero("Let&rsquo;s start a", "Conversation",
                "Schedule a consultation and get to know us more and let us be your solution to your problem.",
                btn("#message", "Schedule Consultation"),
-               "hero-contact.webp", "Reviewing documents with a client")
+               "contact.webp", "Reviewing documents with a client")
         + """
 <section class="section section--luster" id="message">
   <div class="shell">
