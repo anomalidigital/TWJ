@@ -91,8 +91,7 @@ a {
 
 button,
 input,
-textarea,
-select {
+textarea {
   font: inherit;
   color: inherit;
 }
@@ -160,9 +159,6 @@ ul {
   max-width: 62ch;
 }
 
-.center {
-  text-align: center;
-}
 
 /* section heading — centred (Clients, Partners, Companies, Offices) */
 .sec-head {
@@ -216,11 +212,6 @@ ul {
   background: var(--gold);
 }
 
-.split-label__aside p {
-  margin-top: 1rem;
-  font-size: 0.95rem;
-  color: var(--silver);
-}
 
 /* ---------- 4. Buttons ------------------------------------- */
 /* One gesture, and only one: the two colours trade places. A button names the
