@@ -1623,26 +1623,48 @@ a.company__url:hover {
   transform: translateY(0);
 }
 
+/* The preference is about movement, not about colour. A blanket
+   `transition-duration: 0.01ms !important` on every element used to sit here,
+   and it took the button's colour swap and the header's handover with it —
+   anyone whose system asks for less motion got a site where nothing
+   transitioned at all, which is not what they asked for and reads as broken.
+   So: everything that travels, scales, slides or loops is stopped, and
+   everything that only changes colour or fades keeps its timing. */
 @media (prefers-reduced-motion: reduce) {
-
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
-
   html {
     scroll-behavior: auto;
   }
 
+  /* nothing animates position or size */
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-property: background-color, background, color, border-color,
+      box-shadow, opacity, fill, stroke !important;
+  }
+
+  /* and anything that was parked off-position starts where it belongs */
   [data-reveal] {
     opacity: 1;
     transform: none;
   }
 
   .hero__media img {
-    animation: none;
+    transform: none;
+  }
+
+  .btn:hover .arrow,
+  .btn:focus-visible .arrow {
+    transform: none;
+  }
+
+  .person:hover .person__media img,
+  .clients__cell:hover img {
+    transform: none;
+  }
+
+  .wa:hover {
     transform: none;
   }
 }
