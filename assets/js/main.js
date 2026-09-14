@@ -101,9 +101,12 @@
   }
 
   /* ---- 4. Accordion (home · partners) ---------------------- */
+  /* The panel's height is the grid's problem now, so this only has to say
+     which row is open and hand the portrait its owner. */
   document.querySelectorAll('[data-accordion]').forEach(function (acc) {
     var buttons = acc.querySelectorAll('.acc__btn');
-    function sync(btn) {
+
+    function showFigure(btn) {
       var key = btn.getAttribute('data-figure');
       if (!key) return;
       var scope = acc.closest('[data-partners]') || document;
@@ -111,43 +114,20 @@
         node.classList.toggle('is-active', node.getAttribute('data-figure-target') === key);
       });
     }
-    function measure(panel) {
-      panel.style.height = panel.firstElementChild.offsetHeight + 'px';
-    }
-    function remeasure() {
-      buttons.forEach(function (b) {
-        if (b.getAttribute('aria-expanded') === 'true') {
-          var p = document.getElementById(b.getAttribute('aria-controls'));
-          if (p) measure(p);
-        }
-      });
-    }
-    // the first measurement happens before the webfont lands, which reflows the
-    // copy taller and clips it against overflow:hidden — so measure again after
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(remeasure);
-    if ('ResizeObserver' in window) {
-      var ro = new ResizeObserver(remeasure);
-      acc.querySelectorAll('.acc__panel > div').forEach(function (c) { ro.observe(c); });
-    }
+
+    var open = acc.querySelector('.acc__btn[aria-expanded="true"]');
+    if (open) showFigure(open);
+
     buttons.forEach(function (btn) {
-      var panel = document.getElementById(btn.getAttribute('aria-controls'));
-      if (!panel) return;
-      if (btn.getAttribute('aria-expanded') === 'true') { measure(panel); sync(btn); }
       btn.addEventListener('click', function () {
         // one partner is always shown, so the portrait beside the list always
         // has an owner — clicking the open row keeps it open
         if (btn.getAttribute('aria-expanded') === 'true') return;
-        buttons.forEach(function (b) {
-          var p = document.getElementById(b.getAttribute('aria-controls'));
-          b.setAttribute('aria-expanded', 'false');
-          if (p) p.style.height = '0px';
-        });
+        buttons.forEach(function (b) { b.setAttribute('aria-expanded', 'false'); });
         btn.setAttribute('aria-expanded', 'true');
-        measure(panel);
-        sync(btn);
+        showFigure(btn);
       });
     });
-    window.addEventListener('resize', remeasure);
   });
 
   /* ---- 5. Contact form → WhatsApp or e-mail ---------------- */

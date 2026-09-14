@@ -288,13 +288,17 @@ ul {
   transform: translateX(4px);
 }
 
+/* The inverse of the others: it rests filled and clears on hover, the same
+   move the band's button makes. The clear value is navy at zero alpha, not
+   `transparent` — `transparent` is black with no alpha, so fading to it drags
+   the fill through grey on its way out. */
 .btn--ghost {
-  --btn-bg: transparent;
-  --btn-fg: var(--navy);
-  --btn-bd: var(--silver);
-  --btn-bg-on: var(--navy);
-  --btn-fg-on: var(--luster);
-  --btn-bd-on: var(--navy);
+  --btn-bg: var(--navy);
+  --btn-fg: var(--luster);
+  --btn-bd: var(--navy);
+  --btn-bg-on: rgba(31, 58, 95, 0);
+  --btn-fg-on: var(--navy);
+  --btn-bd-on: var(--silver);
 }
 
 /* On the dark band the button gives its plane up rather than changing it: the
@@ -840,15 +844,33 @@ ul {
   background: var(--gold);
 }
 
+/* The panel opens by growing its own row from nothing to its content's
+   height. The height used to be measured in JavaScript and animated in
+   pixels, which meant laying the page out again on every frame — and
+   re-measuring whenever the webfont landed or the window changed. A grid row
+   going 0fr to 1fr needs none of that: the browser knows the height, and the
+   measuring, the ResizeObserver and the font callback are gone with it. */
 .acc__panel {
-  overflow: hidden;
-  height: 0;
-  transition: height 0.48s var(--ease-out);
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.55s var(--ease-out);
 }
 
+.acc__btn[aria-expanded="true"]+.acc__panel {
+  grid-template-rows: 1fr;
+}
+
+/* The clipping box carries no padding of its own: padding sits outside the
+   content box, so a collapsed row still stood 29px tall. The space below the
+   copy is a margin on the copy instead, which is inside the clip. */
 .acc__panel>div {
-  padding: 0 0 1.8rem;
+  overflow: hidden;
+  min-height: 0;
   max-width: 58ch;
+}
+
+.acc__panel>div> :last-child {
+  margin-bottom: 1.8rem;
 }
 
 .acc__panel p {
@@ -1642,6 +1664,12 @@ a.company__url:hover {
     animation: none !important;
     transition-property: background-color, background, color, border-color,
       box-shadow, opacity, fill, stroke !important;
+  }
+
+  /* the one exception: a panel opening is the answer to a click, and showing
+     what changed is the job that motion is doing there */
+  .acc__panel {
+    transition-property: grid-template-rows !important;
   }
 
   /* and anything that was parked off-position starts where it belongs */
