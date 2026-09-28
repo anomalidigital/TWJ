@@ -164,11 +164,29 @@ INSTITUTIONS = [
 
 
 # ---------------------------------------------------------------- shell
+# Scripts may only come from this site, so even an injected <script> or a
+# script from elsewhere cannot run. Styles need 'unsafe-inline' for the
+# style="--d:…" reveal delays, which cannot execute anything. The contact form
+# never posts — it hands off to WhatsApp or the mail client — so form-action is
+# closed too, and the page may fetch nothing at runtime.
+CSP = ("default-src 'self'; "
+       "script-src 'self'; "
+       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+       "font-src 'self' https://fonts.gstatic.com; "
+       "img-src 'self' data:; "
+       "connect-src 'none'; "
+       "object-src 'none'; "
+       "base-uri 'self'; "
+       "form-action 'none'; "
+       "upgrade-insecure-requests")
+
+
 def head(title, desc):
     return """<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="%s">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>%s - Tanuwijaya &amp; Partners</title>
 <meta name="description" content="%s">
@@ -185,7 +203,7 @@ def head(title, desc):
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-""" % (title, desc, title, desc)
+""" % (CSP, title, desc, title, desc)
 
 
 def header(page):
@@ -601,14 +619,14 @@ def page_contact():
             <label><input type="radio" name="channel" value="email"><span class="dot"></span><span class="txt">Send Email</span></label>
           </div>
           <div class="field-row">
-            <div class="field"><label for="fn">First Name</label><input id="fn" name="first_name" type="text" autocomplete="given-name" required></div>
-            <div class="field"><label for="ln">Last Name</label><input id="ln" name="last_name" type="text" autocomplete="family-name"></div>
+            <div class="field"><label for="fn">First Name</label><input id="fn" name="first_name" type="text" autocomplete="given-name" maxlength="60" required></div>
+            <div class="field"><label for="ln">Last Name</label><input id="ln" name="last_name" type="text" autocomplete="family-name" maxlength="60"></div>
           </div>
           <div class="field-row">
-            <div class="field"><label for="em">Email</label><input id="em" name="email" type="email" autocomplete="email"></div>
-            <div class="field"><label for="mb">Mobile Number</label><input id="mb" name="mobile" type="tel" autocomplete="tel"></div>
+            <div class="field"><label for="em">Email</label><input id="em" name="email" type="email" autocomplete="email" maxlength="120"></div>
+            <div class="field"><label for="mb">Mobile Number</label><input id="mb" name="mobile" type="tel" autocomplete="tel" maxlength="30"></div>
           </div>
-          <div class="field"><label for="ms">Message</label><textarea id="ms" name="message" rows="5" required></textarea></div>
+          <div class="field"><label for="ms">Message</label><textarea id="ms" name="message" rows="5" maxlength="1000" required></textarea></div>
           <div class="btn-row mt-0">
             <button class="btn" type="submit">%s</button>
           </div>

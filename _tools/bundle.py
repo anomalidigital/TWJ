@@ -66,8 +66,6 @@ def main():
             key, "" if key == "home" else " hidden", body))
 
     css = open(os.path.join(ROOT, "assets", "css", "style.css"), encoding="utf-8").read()
-    css = css.split("/* ---------- 2. Reset")[0] + "/* ---------- 2. Reset" + \
-        css.split("/* ---------- 2. Reset", 1)[1]
     js = open(os.path.join(ROOT, "assets", "js", "main.js"), encoding="utf-8").read()
 
     extra_css = """

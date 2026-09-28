@@ -11,12 +11,9 @@
 
   var solid = false;
 
-  // Scroll says when the header changes, not how fast — the same way the
-  // current twj.co.id does it. The bar stays transparent over the top of the
-  // banner and turns solid past the line; the fade itself lives in CSS.
-  // Reading the fade off the scroll position instead handed its timing to the
-  // wheel. The line sits lower on the way back up (20 against 45) so a scroll
-  // that rests on it cannot flutter between the two states.
+  // The header only needs to know which side of the line the page is on; the
+  // fade itself runs in CSS. The line is lower on the way back up (30 against
+  // 65) so a scroll resting on it cannot flutter between the two states.
   function paintHeader() {
     navRaf = 0;
     if (!header) return;
@@ -101,8 +98,8 @@
   }
 
   /* ---- 4. Accordion (home · partners) ---------------------- */
-  /* The panel's height is the grid's problem now, so this only has to say
-     which row is open and hand the portrait its owner. */
+  /* CSS handles the panel's height; this only marks which row is open and
+     shows that partner's portrait. */
   document.querySelectorAll('[data-accordion]').forEach(function (acc) {
     var buttons = acc.querySelectorAll('.acc__btn');
 
@@ -161,7 +158,10 @@
           '?subject=' + encodeURIComponent('Consultation request — ' + (name || 'Website enquiry')) +
           '&body=' + encodeURIComponent(lines.join('\r\n'));
       } else {
-        window.open(form.getAttribute('data-wa') + '?text=' + encodeURIComponent(lines.join('\n')), '_blank');
+        // noopener: the new tab gets no handle on this one, so it cannot
+        // redirect it behind the visitor's back
+        window.open(form.getAttribute('data-wa') + '?text=' + encodeURIComponent(lines.join('\n')),
+          '_blank', 'noopener');
       }
     });
   }

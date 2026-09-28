@@ -29,9 +29,7 @@
   --shell: 1320px;
   --gutter: clamp(1.25rem, 5vw, 4.5rem);
   --section: clamp(2.6rem, 4.6vw, 4.5rem);
-  /* The site moves on one curve. There were four names for this exact value
-     — --ease, --ease-out, --ease-soft, --ease-spring — which read as four
-     decisions when there was only ever one. */
+  /* the site moves on one curve */
   --ease-out: cubic-bezier(0.25, 1, 0.5, 1);
   /* the button's colour swap, picked in the button lab */
   --ease-btn: cubic-bezier(0.22, 1, 0.36, 1);
@@ -214,13 +212,11 @@ ul {
 
 
 /* ---------- 4. Buttons ------------------------------------- */
-/* One gesture, and only one: the two colours trade places. A button names the
-   plane, the label and the hairline it rests on, and the same three again for
-   where it lands, so a variant is six lines and no new rules and nothing below
-   restates a colour. No lift, no shadow — those stacked a second and a third
-   movement onto a hover that only ever had one thing to say.
-   Corners stay square; the hairline is the page's own language.
-   The duration and the curve were chosen from the button lab, not guessed. */
+/* One gesture: the two colours trade places. Each button names the plane,
+   label and hairline it rests on and the three it lands on, so a variant is
+   six custom properties and no new rules. No lift or shadow — the hover has
+   one thing to say. Square corners match the page's hairlines. The timing
+   was chosen in the button lab. */
 .btn {
   --btn-bg: var(--navy);
   --btn-fg: var(--luster);
@@ -292,11 +288,9 @@ ul {
   --btn-bd-on: var(--silver);
 }
 
-/* On the dark band the button gives its plane up rather than changing it: the
-   cream fill clears and only the hairline and the label are left, so the
-   photograph behind carries the state instead of a second block of colour.
-   The clear value is cream at zero alpha, not `transparent` — `transparent`
-   is black with no alpha, so fading to it drags the fill through grey. */
+/* On the dark band the fill clears to its hairline and the photograph carries
+   the state. Cream at zero alpha, not `transparent`: `transparent` is black
+   with no alpha, and a fade to it passes through grey. */
 .btn--solidLight {
   --btn-bg: var(--luster);
   --btn-fg: var(--navy);
@@ -314,11 +308,9 @@ ul {
 }
 
 /* ---------- 5. Header -------------------------------------- */
-/* Transparent while the banner is behind it, warm white once you scroll. The
-   handover runs on its own clock, not the visitor's: crossing the line starts
-   a fixed fade, so it takes the same half second whether the page was nudged
-   or flung. Tying it to scroll position instead made its speed equal to the
-   scroll speed — one flick of the wheel and the whole change was over. */
+/* Transparent over the banner, warm white once scrolled. The script only says
+   which side of the line the page is on; the fade runs here on a fixed
+   duration, so it looks the same however fast the page is scrolled. */
 .header {
   position: fixed;
   inset: 0 0 auto;
@@ -730,10 +722,8 @@ ul {
   align-items: start;
 }
 
-/* Stacked, the portrait belongs at the top: below the accordion it ended up
-   after every bio and a button, far from the names that select it. The
-   markup keeps the text first so the section still reads heading-then-people
-   when the two sit side by side. */
+/* Stacked, the portrait leads, so it sits beside the names that select it.
+   The markup keeps the text first for the side-by-side reading order. */
 @media (max-width: 899px) {
   .duo--top .partner-figure {
     order: -1;
@@ -835,12 +825,8 @@ ul {
   background: var(--gold);
 }
 
-/* The panel opens by growing its own row from nothing to its content's
-   height. The height used to be measured in JavaScript and animated in
-   pixels, which meant laying the page out again on every frame — and
-   re-measuring whenever the webfont landed or the window changed. A grid row
-   going 0fr to 1fr needs none of that: the browser knows the height, and the
-   measuring, the ResizeObserver and the font callback are gone with it. */
+/* The panel opens by growing its grid row from 0fr to 1fr — the browser
+   knows the content height, so nothing has to be measured in script. */
 .acc__panel {
   display: grid;
   grid-template-rows: 0fr;
@@ -851,16 +837,15 @@ ul {
   grid-template-rows: 1fr;
 }
 
-/* The clipping box carries no padding of its own: padding sits outside the
-   content box, so a collapsed row still stood 29px tall. The space below the
-   copy is a margin on the copy instead, which is inside the clip. */
+/* No padding on the clipping box — padding would survive the collapse. The
+   space under the copy is a margin inside the clip. */
 .acc__panel>div {
   overflow: hidden;
   min-height: 0;
   max-width: 58ch;
 }
 
-.acc__panel>div> :last-child {
+.acc__panel>div>:last-child {
   margin-bottom: 1.8rem;
 }
 
@@ -1636,13 +1621,9 @@ a.company__url:hover {
   transform: translateY(0);
 }
 
-/* The preference is about movement, not about colour. A blanket
-   `transition-duration: 0.01ms !important` on every element used to sit here,
-   and it took the button's colour swap and the header's handover with it —
-   anyone whose system asks for less motion got a site where nothing
-   transitioned at all, which is not what they asked for and reads as broken.
-   So: everything that travels, scales, slides or loops is stopped, and
-   everything that only changes colour or fades keeps its timing. */
+/* Reduced motion stops movement, not colour. Anything that travels, scales,
+   slides or loops is off; colour and opacity changes keep their timing, so
+   the site still answers the pointer instead of feeling broken. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -1663,7 +1644,7 @@ a.company__url:hover {
     transition-property: grid-template-rows !important;
   }
 
-  /* and anything that was parked off-position starts where it belongs */
+  /* and anything parked off-position starts where it belongs */
   [data-reveal] {
     opacity: 1;
     transform: none;
