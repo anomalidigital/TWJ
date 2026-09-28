@@ -1106,54 +1106,125 @@ ul {
 
 /* ---------- 11. Companies ---------------------------------- */
 /* columns stay wide enough that a domain never has to break across lines */
+/* Below the desktop row the group reads as a ruled index: each company is one
+   row, a hairline, the name, and its web address right beneath it, and the
+   whole row opens the site. The address sits close to its own name so it can
+   only belong to one company. From 880px up the columns return unchanged. */
 .companies {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1.6rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.company {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 0.3rem;
+  padding: 1.05rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.company__name {
+  display: block;
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.32;
+}
+
+.company__url {
+  display: block;
+  font-size: 0.86rem;
+  color: var(--slate);
+  overflow-wrap: break-word;
+  transition: color 0.4s var(--ease-out);
+}
+
+a.company__url:hover {
+  color: var(--gold);
 }
 
 @media (min-width: 560px) {
   .companies {
     grid-template-columns: repeat(2, 1fr);
+    column-gap: clamp(1.5rem, 4vw, 2.5rem);
   }
 }
 
+/* phones and tablets: the row is the target, sized for a thumb */
+@media (max-width: 879px) {
+
+  .company__name {
+    text-wrap: pretty;
+  }
+
+  /* the link reaches across its whole row, so tapping the name opens it too */
+  a.company__url::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+
+  /* marks the address as a link that opens a new tab */
+  a.company__url::after {
+    content: "";
+    display: inline-block;
+    width: 0.7em;
+    height: 0.7em;
+    margin-left: 0.4em;
+    vertical-align: 0.02em;
+    background: currentColor;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M4 2h6v6M10 2 2.5 9.5' fill='none' stroke='black' stroke-width='1.4'/%3E%3C/svg%3E") center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M4 2h6v6M10 2 2.5 9.5' fill='none' stroke='black' stroke-width='1.4'/%3E%3C/svg%3E") center / contain no-repeat;
+  }
+
+  .company:has(a.company__url):active {
+    background: rgba(31, 58, 95, 0.04);
+  }
+
+  .company:hover a.company__url {
+    color: var(--gold);
+  }
+
+  /* the focus ring goes round the row the link now covers */
+  a.company__url:focus-visible {
+    outline: none;
+  }
+
+  .company:has(a.company__url:focus-visible) {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
+}
+
+/* desktop: the columns with vertical dividers, address pinned to the foot */
 @media (min-width: 880px) {
   .companies {
     grid-template-columns: repeat(3, 1fr);
+    gap: 1.6rem 0;
+    border-bottom: 0;
   }
-}
 
-@media (min-width: 1300px) {
-  .companies {
-    grid-template-columns: repeat(6, 1fr);
-    gap: 0;
-  }
-}
-
-.company {
-  padding: 0 clamp(0.8rem, 1.4vw, 1.3rem);
-  border-left: 1px solid var(--line);
-  display: flex;
-  flex-direction: column;
-}
-
-.company:first-child {
-  border-left: 0;
-  padding-left: 0;
-}
-
-@media (max-width: 559px) {
   .company {
-    border-left: 0;
-    padding-left: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 0 clamp(0.8rem, 1.4vw, 1.3rem);
+    border-top: 0;
+    border-left: 1px solid var(--line);
   }
-}
 
-@media (min-width: 560px) and (max-width: 879px) {
-  .company:nth-child(2n + 1) {
-    border-left: 0;
-    padding-left: 0;
+  .company__name {
+    font-size: 1rem;
+    line-height: 1.35;
+  }
+
+  .company__url {
+    margin-top: auto;
+    padding-top: 0.9rem;
+    font-size: 0.8rem;
   }
 }
 
@@ -1164,27 +1235,16 @@ ul {
   }
 }
 
-.company__name {
-  display: block;
-  font-family: var(--serif);
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--navy);
-  line-height: 1.35;
-}
+@media (min-width: 1300px) {
+  .companies {
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0;
+  }
 
-.company__url {
-  display: block;
-  margin-top: auto;
-  padding-top: 0.9rem;
-  font-size: 0.8rem;
-  color: var(--slate);
-  overflow-wrap: break-word;
-  transition: color 0.4s var(--ease-out);
-}
-
-a.company__url:hover {
-  color: var(--gold);
+  .company:first-child {
+    border-left: 0;
+    padding-left: 0;
+  }
 }
 
 /* ---------- 12. Clients ------------------------------------ */
