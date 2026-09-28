@@ -905,15 +905,46 @@ ul {
 }
 
 /* ---------- 9. Services / Industries grids ----------------- */
+/* Home's row of four: vertical hairlines only, one on each side of every
+   column, the outer two included, and no rule under the headings. Stacked on
+   a phone there are no columns to divide, so the lines drop away there. */
 .svc-row {
   display: grid;
   grid-template-columns: 1fr;
   gap: 2rem 0;
 }
 
+.svc-row .svc__head {
+  margin-bottom: 1.15rem;
+}
+
 @media (min-width: 640px) {
   .svc-row {
     grid-template-columns: repeat(2, 1fr);
+    border-inline: 1px solid var(--line);
+  }
+
+  .svc-row .svc {
+    padding: 0 clamp(1rem, 2vw, 1.9rem);
+    border-left: 1px solid var(--line);
+  }
+}
+
+/* Two columns: the first of each line already sits against the row's own
+   border. The rows touch, with the space between them carried as padding
+   inside the first row, so the middle line runs unbroken like the outer two
+   instead of stopping at the gap. */
+@media (min-width: 640px) and (max-width: 1039px) {
+  .svc-row {
+    row-gap: 0;
+  }
+
+  .svc-row .svc:nth-child(2n + 1) {
+    border-left: 0;
+  }
+
+  .svc-row .svc:nth-child(-n + 2) {
+    padding-bottom: 2rem;
   }
 }
 
@@ -922,29 +953,9 @@ ul {
     grid-template-columns: repeat(4, 1fr);
     gap: 0;
   }
-}
 
-.svc-row .svc {
-  padding: 0 clamp(1rem, 2vw, 1.9rem);
-  border-left: 1px solid var(--line);
-}
-
-.svc-row .svc:first-child {
-  border-left: 0;
-  padding-left: 0;
-}
-
-@media (max-width: 639px) {
-  .svc-row .svc {
+  .svc-row .svc:first-child {
     border-left: 0;
-    padding-left: 0;
-  }
-}
-
-@media (min-width: 640px) and (max-width: 1039px) {
-  .svc-row .svc:nth-child(2n + 1) {
-    border-left: 0;
-    padding-left: 0;
   }
 }
 

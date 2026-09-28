@@ -265,14 +265,14 @@ SERVICES_HOME_ORDER = ["Audit", "Legal", "Tax", "Other Services"]
 
 
 def services_row():
-    """Home: one row of four, reading left to right, hairline between each."""
+    """Home: one row of four, reading left to right, framed by vertical hairlines
+    and with no rule under the headings."""
     by_title = {t: (ic, t, lis) for ic, t, lis in SERVICES}
     items = []
     for title in SERVICES_HOME_ORDER:
         ic, t, lis = by_title[title]
         items.append("""<div class="svc" data-reveal>
         <div class="svc__head"><span class="svc__icon">%s</span><h3>%s</h3></div>
-        <div class="svc__rule"></div>
         <ul>%s</ul>
       </div>""" % (icon(ic), t, "".join("<li>%s</li>" % i for i in lis)))
     return '<div class="svc-row">%s</div>' % "".join(items)
